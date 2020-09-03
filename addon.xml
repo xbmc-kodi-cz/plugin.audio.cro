@@ -1,0 +1,20 @@
+﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.0.0">
+  <extension library="main.py" point="xbmc.python.pluginsource">
+    <provides>audio</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">Sledování O2TV</summary>
+    <summary lang="cs_CZ">Sledování O2TV</summary>
+    <description lang="en_GB">
+    </description>
+    <description lang="cs_CZ">
+    </description>
+    <platform>all</platform>
+    <source>https://github.com/waladir/plugin.audio.cro</source>
+    <news>
+    </news>
+    <assets>
+        <icon>icon.png</icon>
+    </assets>
+  </extension>
+</addon>

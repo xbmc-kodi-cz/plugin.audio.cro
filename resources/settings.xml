@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<category label="Nastavení">
+        <setting label="Počet položek v historii vyhledávání" type="number" id="search_history" default="10"/>
+	</category>
+	<category label="Logování">
+        <setting label="Logování požadavků" type="bool" id="log_request" default="false"/>
+        <setting label="Logování odpovědí" type="bool" id="log_response" default="false"/>
+	</category>
+</settings>
