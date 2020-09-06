@@ -6,6 +6,8 @@ import xbmcplugin
 import xbmcaddon
 import xbmc
 
+from libs.utils import call_api
+
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
@@ -13,3 +15,6 @@ def play(url):
     list_item = xbmcgui.ListItem(path = url)
     list_item.setContentLookup(False)
     xbmcplugin.setResolvedUrl(_handle, True, list_item)
+
+
+

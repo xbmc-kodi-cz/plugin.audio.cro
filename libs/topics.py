@@ -36,7 +36,7 @@ def list_topics(label):
 
 def list_topic(topicId, label):
     xbmcplugin.setPluginCategory(_handle, label)    
-    data = call_api(url = "https://api.mujrozhlas.cz/topics/" + topicId + "/episodes")
+    data = call_api(url = "https://api.mujrozhlas.cz/topics/" + topicId + "/episodes?page[limit]=0")
     if "err" in data:
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
         sys.exit()
@@ -61,17 +61,12 @@ def list_topic(topicId, label):
                 show = shows[key] 
                 list_item = xbmcgui.ListItem(label=show["title"])
                 list_item.setArt({ "thumb" : show["img"], "icon" : show["img"] })
-                list_item.setInfo( "music", { "title" : show["title"], "artist" : show["author"], "comment" : show["description"] })
-                url = get_url(action='list_shows', showId = show["id"], label = show["title"].encode("utf-8"))  
+                list_item.setInfo( "video", { "title" : show["title"], "director" : [show["author"]] , "plot" : show["description"], "studio" : show["station"] })
+                if len(show["cast"]) > 0:
+                    list_item.setInfo( "video", { "cast" : show["cast"] })   
+                url = get_url(action='list_show', showId = show["id"], label = show["title"].encode("utf-8")) 
+                list_item.setContentLookup(False) 
                 xbmcplugin.addDirectoryItem(_handle, url, list_item, True)              
-                # starttime =  parse_date(episode["attributes"]["since"])
-                # title = episode["attributes"]["mirroredShow"]["title"] + " - " + episode["attributes"]["title"] + " (" + starttime.strftime("%d.%m.%Y %H:%M:%S") + ")"
-                # url = episode["attributes"]["audioLinks"][0]["url"]
-                # list_item = xbmcgui.ListItem(label=title)
-                # list_item.setProperty("IsPlayable", "true")
-                # list_item.setContentLookup(False)
-                # url = get_url(action='play', url = url)  
-                # xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
         xbmcplugin.endOfDirectory(_handle)
     else:
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
@@ -94,11 +89,11 @@ def list_topic_recommended(topicId, filtr, label):
                     if "entity" in item and "type" in item["entity"] and item["entity"]["type"] == "show":
                         list_item = xbmcgui.ListItem(label=item["title"])
                         list_item.setArt({ "thumb" : item["image"], "icon" : item["image"]})
-                        url = get_url(action='list_shows', showId = item["entity"]["id"], label = item["title"].encode("utf-8"))  
+                        url = get_url(action='list_show', showId = item["entity"]["id"], label = item["title"].encode("utf-8"))  
                         xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
                     if "type" in item and item["type"] == "episode":
                         starttime =  parse_date(item["attributes"]["since"])
-                        title = item["attributes"]["mirroredShow"]["title"] + " - " + item["attributes"]["title"] + " (" + starttime.strftime("%d.%m.%Y %H:%M:%S") + ")"
+                        title = item["attributes"]["mirroredShow"]["title"] + " - " + item["attributes"]["title"] + " (" + starttime.strftime("%d.%m.%Y %H:%M") + ")"
                         url = item["attributes"]["audioLinks"][0]["url"]
                         list_item = xbmcgui.ListItem(label=title)
                         list_item.setProperty("IsPlayable", "true")

@@ -1,17 +1,26 @@
-﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.0.0">
+﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.0.1">
   <extension library="main.py" point="xbmc.python.pluginsource">
     <provides>audio</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en_GB">Sledování O2TV</summary>
-    <summary lang="cs_CZ">Sledování O2TV</summary>
+    <summary lang="en_GB">Český rozhlas</summary>
+    <summary lang="cs_CZ">Český rozhlas</summary>
     <description lang="en_GB">
+        Poslech pořadů archivu stanic Českého rozhlasu    
     </description>
     <description lang="cs_CZ">
+        Poslech pořadů archivu stanic Českého rozhlasu    
     </description>
     <platform>all</platform>
     <source>https://github.com/waladir/plugin.audio.cro</source>
     <news>
+v1.0.1 (2020-09-07)    
+- změna vyhledávání z fulltextového na hledání v názvu epizody/pořadu
+- stránkování v pořadech
+- oštření chyby kdy u pořadu chyběla stanice
+
+v1.0.0 (2020-09-06) 
+- první vydání    
     </news>
     <assets>
         <icon>icon.png</icon>

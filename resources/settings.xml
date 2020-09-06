@@ -2,6 +2,7 @@
 <settings>
 	<category label="Nastavení">
         <setting label="Počet položek v historii vyhledávání" type="number" id="search_history" default="10"/>
+		<setting label="Skrýt Nastavení stanic v menu" type="bool" id="hide_stations_settings" default="false"/>
 	</category>
 	<category label="Logování">
         <setting label="Logování požadavků" type="bool" id="log_request" default="false"/>

@@ -23,6 +23,13 @@ def parse_date(date):
     second = int(date[17:19])
     return datetime(year, month, day, hour, minute, second)
 
+def parse_datetime(date):
+    print(date)
+    day = int(date[0:2])
+    month = int(date[3:5])
+    year = int(date[6:10])
+    return datetime(year, month, day)    
+
 def call_api(url):
     header = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0", "Content-Type":"application/json"}
     request = Request(url = url , data = None, headers = header)
