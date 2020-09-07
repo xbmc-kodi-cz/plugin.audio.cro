@@ -1,3 +1,6 @@
+v1.0.2 (2020-09-07)
+- přidání informace o dílech, pokud jsou k dispozici
+
 v1.0.1 (2020-09-07)    
 - změna vyhledávání z fulltextového na hledání v názvu epizody/pořadu
 - stránkování v pořadech

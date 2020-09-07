@@ -36,7 +36,7 @@ def list_topics(label):
 
 def list_topic(topicId, label):
     xbmcplugin.setPluginCategory(_handle, label)    
-    data = call_api(url = "https://api.mujrozhlas.cz/topics/" + topicId + "/episodes?page[limit]=0")
+    data = call_api(url = "https://api.mujrozhlas.cz/topics/" + topicId + "/episodes?page[limit]=100")
     if "err" in data:
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
         sys.exit()

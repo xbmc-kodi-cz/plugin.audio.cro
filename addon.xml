@@ -1,4 +1,4 @@
-﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.0.1">
+﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.0.2">
   <extension library="main.py" point="xbmc.python.pluginsource">
     <provides>audio</provides>
   </extension>
@@ -14,6 +14,9 @@
     <platform>all</platform>
     <source>https://github.com/waladir/plugin.audio.cro</source>
     <news>
+v1.0.2 (2020-09-07)
+- přidání informace o dílech, pokud jsou k dispozici
+
 v1.0.1 (2020-09-07)    
 - změna vyhledávání z fulltextového na hledání v názvu epizody/pořadu
 - stránkování v pořadech
