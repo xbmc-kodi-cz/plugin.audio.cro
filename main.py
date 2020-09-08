@@ -13,7 +13,8 @@ from libs.live import list_live
 from libs.program import list_program, list_program_week, list_program_day, program_set_week
 from libs.topics import list_topics, list_topic, list_topic_recommended
 from libs.shows import list_show, list_shows_menu, list_shows_stations, list_shows_stations_shows
-from libs.search import list_search, do_search
+from libs.search import list_search, list_search_title, list_search_person, do_search, do_search_person, delete_search, delete_search_person
+from libs.favourites import list_favourites, add_favourites, delete_favourites
 from libs.stations import list_stations, toogle_station
 from libs.player import play
 
@@ -39,8 +40,12 @@ def list_menu():
     xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
 
     list_item = xbmcgui.ListItem(label="Vyhledávání")
-    url = get_url(action='list_search', label = "Vyhledávání")  
+    url = get_url(action='list_search_title', label = "Vyhledávání")  
     xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
+
+    list_item = xbmcgui.ListItem(label="Oblíbené pořady")
+    url = get_url(action='list_favourites', label = "Oblíbené")  
+    xbmcplugin.addDirectoryItem(_handle, url, list_item, True)    
 
     if addon.getSetting("hide_stations_settings") == "false":
         list_item = xbmcgui.ListItem(label="Nastavení stanic")
@@ -80,12 +85,29 @@ def router(paramstring):
             list_shows_stations_shows(params["stationId"], params["page"], params["label"])  
 
         elif params['action'] == 'list_show':
-            list_show(params["showId"], params["label"])   
+            list_show(params["showId"], params["page"], params["label"])   
 
         elif params['action'] == 'list_search':
             list_search(params["label"])
+        elif params['action'] == 'list_search_title':
+            list_search_title(params["label"])    
+        elif params['action'] == 'list_search_person':
+            list_search_person(params["label"])                       
         elif params['action'] == 'do_search':
             do_search(params["query"], params["label"])
+        elif params['action'] == 'do_search_person':
+            do_search_person(params["query"], params["label"])            
+        elif params['action'] == 'delete_search':
+            delete_search(params["query"])
+        elif params['action'] == 'delete_search_person':
+            delete_search_person(params["query"])            
+
+        elif params['action'] == 'list_favourites':
+            list_favourites(params["label"])        
+        elif params['action'] == 'add_favourites':
+            add_favourites(params["showId"])                    
+        elif params['action'] == 'delete_favourites':
+            delete_favourites(params["showId"])     
 
         elif params['action'] == 'list_stations':
             list_stations(params["label"])

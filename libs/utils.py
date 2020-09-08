@@ -24,7 +24,6 @@ def parse_date(date):
     return datetime(year, month, day, hour, minute, second)
 
 def parse_datetime(date):
-    print(date)
     day = int(date[0:2])
     month = int(date[3:5])
     year = int(date[6:10])

@@ -41,14 +41,13 @@ def list_topic(topicId, label):
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
         sys.exit()
     if "data" in data and len(data["data"]) > 0:
-        list_item = xbmcgui.ListItem(label="Doporučené")
-        list_item.setProperty("IsPlayable", "false")
-        url = get_url(action='list_topic_recommended', topicId = topicId, filtr = "Doporučené pořady",  label = label + " / Doporučené")  
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
-        list_item = xbmcgui.ListItem(label="Nejnovější")
-        list_item.setProperty("IsPlayable", "false")
-        url = get_url(action='list_topic_recommended', topicId = topicId, filtr = "Nejnovější audia", label = label + " / Nejnovější")  
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
+        widgets = get_widgets(topicId)
+        for widget in widgets:
+            list_item = xbmcgui.ListItem(label=widget)
+            list_item.setProperty("IsPlayable", "false")
+            url = get_url(action='list_topic_recommended', topicId = topicId, filtr = widget.encode("utf-8"),  label = label + " / " + widget.encode("utf-8"))  
+            xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
+
         shows = {}
         shows_added = []
         for episode in data["data"]:
@@ -61,10 +60,12 @@ def list_topic(topicId, label):
                 show = shows[key] 
                 list_item = xbmcgui.ListItem(label=show["title"])
                 list_item.setArt({ "thumb" : show["img"], "icon" : show["img"] })
-                list_item.setInfo( "video", { "title" : show["title"], "director" : [show["author"]] , "plot" : show["description"], "studio" : show["station"] })
+                list_item.setInfo( "video", { "title" : show["title"], "director" : [show["director"]], "plot" : show["description"], "studio" : show["station"] })
                 if len(show["cast"]) > 0:
                     list_item.setInfo( "video", { "cast" : show["cast"] })   
-                url = get_url(action='list_show', showId = show["id"], label = show["title"].encode("utf-8")) 
+                menus = [("Přidat k oblíbeným", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + ")")]
+                list_item.addContextMenuItems(menus)
+                url = get_url(action='list_show', showId = show["id"], page = 1, label = show["title"].encode("utf-8"))                
                 list_item.setContentLookup(False) 
                 xbmcplugin.addDirectoryItem(_handle, url, list_item, True)              
         xbmcplugin.endOfDirectory(_handle)
@@ -86,11 +87,27 @@ def list_topic_recommended(topicId, filtr, label):
                 elif "entities" in widget["attributes"]:
                     items = widget["attributes"]["entities"]
                 for item in items:
-                    if "entity" in item and "type" in item["entity"] and item["entity"]["type"] == "show":
-                        list_item = xbmcgui.ListItem(label=item["title"])
-                        list_item.setArt({ "thumb" : item["image"], "icon" : item["image"]})
-                        url = get_url(action='list_show', showId = item["entity"]["id"], label = item["title"].encode("utf-8"))  
-                        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
+                    if "entity" in item and "type" in item["entity"]:
+                        if item["entity"]["type"] == "show":
+                            show = get_show(item["entity"]["id"])
+                            list_item = xbmcgui.ListItem(label=show["title"])
+                            list_item.setArt({ "thumb" : show["img"], "icon" : show["img"] })
+                            list_item.setInfo( "video", { "title" : show["title"], "director" : [show["director"]] , "plot" : show["description"], "studio" : show["station"] })
+                            if len(show["cast"]) > 0:
+                                list_item.setInfo( "video", { "cast" : show["cast"] })                
+                            menus = [("Přidat k oblíbeným", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + ")")]
+                            list_item.addContextMenuItems(menus)
+                            url = get_url(action='list_show', showId = show["id"], page = 1, label = show["title"].encode("utf-8"))  
+                            xbmcplugin.addDirectoryItem(_handle, url, list_item, True)                                
+                        if item["entity"]["type"] == "episode":
+                            starttime =  parse_date(item["entity"]["attributes"]["since"])
+                            title = item["entity"]["attributes"]["mirroredShow"]["title"] + " - " + item["entity"]["attributes"]["title"] + " (" + starttime.strftime("%d.%m.%Y %H:%M") + ")"
+                            url = item["entity"]["attributes"]["audioLinks"][0]["url"]
+                            list_item = xbmcgui.ListItem(label=title)
+                            list_item.setProperty("IsPlayable", "true")
+                            list_item.setContentLookup(False)
+                            url = get_url(action='play', url = url)  
+                            xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
                     if "type" in item and item["type"] == "episode":
                         starttime =  parse_date(item["attributes"]["since"])
                         title = item["attributes"]["mirroredShow"]["title"] + " - " + item["attributes"]["title"] + " (" + starttime.strftime("%d.%m.%Y %H:%M") + ")"
@@ -100,8 +117,19 @@ def list_topic_recommended(topicId, filtr, label):
                         list_item.setContentLookup(False)
                         url = get_url(action='play', url = url)  
                         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
-
         xbmcplugin.endOfDirectory(_handle)
     else:
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
         sys.exit()
+
+def get_widgets(topicId):
+    widgets = []
+    data = call_api(url = "https://api.mujrozhlas.cz/topics/" + topicId)
+    if "err" in data:
+        xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
+        sys.exit()
+    if "data" in data and len(data["data"]) > 0 and "attributes" in data["data"] and "widgets" in data["data"]["attributes"]:
+        for widget in data["data"]["attributes"]["widgets"]:
+            if "title" in widget["attributes"] and len(widget["attributes"]["title"]) > 0:
+                widgets.append(widget["attributes"]["title"])
+    return widgets

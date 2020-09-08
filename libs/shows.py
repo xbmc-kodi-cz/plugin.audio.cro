@@ -11,6 +11,7 @@ from urlparse import parse_qsl
 
 from libs.utils import get_url, call_api, parse_date
 from libs.stations import get_stations, get_station_from_stationId
+from libs.persons import get_person
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
@@ -34,51 +35,55 @@ def list_shows_stations(label):
 def list_shows_stations_shows(stationId, page, label):
     page = int(page)
     page_size = 30
-    print(page)
     xbmcplugin.setPluginCategory(_handle, label)    
     station  = get_station_from_stationId(stationId)
-    data = call_api(url = "https://api.mujrozhlas.cz//stations/" + stationId + "/shows?page[limit]=" + str(page_size) +  "&page[offset]=" + str((page-1)*page_size))
+    data = call_api(url = "https://api.mujrozhlas.cz/stations/" + stationId + "/shows?page[limit]=" + str(page_size) +  "&page[offset]=" + str((page-1)*page_size))
     if "err" in data:
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
         sys.exit()
     if "data" in data and len(data["data"]) > 0:
         items_count = int(data["meta"]["count"])
-
-        if page > 1:
-            list_item = xbmcgui.ListItem(label="Předchozí strana")
-            url = get_url(action='list_shows_stations_shows', stationId =  stationId, page = page - 1, label = label.encode("utf-8"))  
-            xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
-
+        # if page > 1:
+        #     list_item = xbmcgui.ListItem(label="Předchozí strana")
+        #     url = get_url(action='list_shows_stations_shows', stationId =  stationId, page = page - 1, label = label)  
+        #     xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
         for show in data["data"]:
-            #cast = [] 
+            cast = [] 
             list_item = xbmcgui.ListItem(label=show["attributes"]["title"])
             list_item.setArt({ "thumb" : show["attributes"]["asset"]["url"], "icon" : show["attributes"]["asset"]["url"] })
             list_item.setInfo( "video", { "title" : show["attributes"]["title"], "director" : [show["attributes"]["asset"]["credit"]["author"]] , "plot" : show["attributes"]["description"], "studio" : station  })            
-            # if "participants" in show["relationships"] and len(show["relationships"]["participants"]["data"]) > 0:
-            #     for person in show["relationships"]["participants"]["data"]:
-            #         cast.append(get_person(person["id"]))
-            #     list_item.setInfo( "video", { "cast" : cast })            
-            url = get_url(action='list_show', showId = show["id"], label = show["attributes"]["title"].encode("utf-8"))  
+            if "participants" in show["relationships"] and len(show["relationships"]["participants"]["data"]) > 0:
+                for person in show["relationships"]["participants"]["data"]:
+                    cast.append(get_person(person["id"]))
+                list_item.setInfo( "video", { "cast" : cast })            
+            url = get_url(action='list_show', showId = show["id"], page = 1, label = show["attributes"]["title"].encode("utf-8"))  
+            menus = [("Přidat k oblíbeným", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + ")")]
+            list_item.addContextMenuItems(menus)
             xbmcplugin.addDirectoryItem(_handle, url, list_item, True)        
-
         if page * page_size <= items_count:
             list_item = xbmcgui.ListItem(label="Následující strana")
-            url = get_url(action='list_shows_stations_shows', stationId =  stationId, page = page + 1, label = label.encode("utf-8"))  
+            url = get_url(action='list_shows_stations_shows', stationId =  stationId, page = page + 1, label = label)  
             xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
-
         xbmcplugin.endOfDirectory(_handle)        
     else:
         xbmcgui.Dialog().notification("ČRo","Nenalezen žádný pořad", xbmcgui.NOTIFICATION_WARNING, 4000)
         sys.exit()
 
-def list_show(showId, label):
+def list_show(showId, page, label):
+    page = int(page)
+    page_size = 30    
     show = get_show(showId)
     xbmcplugin.setPluginCategory(_handle, label)    
-    data = call_api(url = "https://api.mujrozhlas.cz/shows/" + showId + "/episodes?sort=-since")
+    data = call_api(url = "https://api.mujrozhlas.cz/shows/" + showId + "/episodes?sort=-since&page[limit]=" + str(page_size) + "&page[offset]=" + str((page-1)*page_size))
     if "err" in data:
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
         sys.exit()
     if "data" in data and len(data["data"]) > 0:
+        items_count = int(data["meta"]["count"])
+        # if page > 1:
+        #     list_item = xbmcgui.ListItem(label="Předchozí strana")
+        #     url = get_url(action='list_show', showId =  showId, page = page - 1, label = label)  
+        #     xbmcplugin.addDirectoryItem(_handle, url, list_item, True)        
         for episode in data["data"]:
             if "attributes" in episode and "title" in episode["attributes"] and len(episode["attributes"]["title"]) > 0:
                 starttime =  parse_date(episode["attributes"]["since"])
@@ -90,13 +95,18 @@ def list_show(showId, label):
                 link = episode["attributes"]["audioLinks"][0]["url"]
                 list_item = xbmcgui.ListItem(label=title)
                 list_item.setArt({ "thumb" : show["img"], "icon" : show["img"] })
-                list_item.setInfo( "video", { "title" : show["title"], "director" : [show["author"]] , "plot" : show["description"], "studio" : show["station"] })
+                list_item.setInfo( "video", { "tvshowtitle" : show["title"], "title" : title, "aired" : starttime.strftime("%Y-%m-%d"), "director" : [show["director"]] , "plot" : show["description"], "studio" : show["station"] })
                 if len(show["cast"]) > 0:
                     list_item.setInfo( "video", { "cast" : show["cast"] })                
                 list_item.setProperty("IsPlayable", "true")
                 list_item.setContentLookup(False)
                 url = get_url(action='play', url = link.encode("utf-8"))  
                 xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+        if page * page_size <= items_count:
+            list_item = xbmcgui.ListItem(label="Následující strana")
+            url = get_url(action='list_show', showId =  showId, page = page + 1, label = label)  
+            xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
+
         xbmcplugin.endOfDirectory(_handle)
     else:
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
@@ -115,26 +125,16 @@ def get_show(showId):
         author = data["data"]["attributes"]["asset"]["credit"]["author"]
         source = data["data"]["attributes"]["asset"]["credit"]["source"]
         cast = []
-        # if "participants" in data["data"]["relationships"] and len(data["data"]["relationships"]["participants"]["data"]) > 0:
-        #     for person in data["data"]["relationships"]["participants"]["data"]:
-        #             cast.append(get_person(person["id"]))
+        if "participants" in data["data"]["relationships"] and len(data["data"]["relationships"]["participants"]["data"]) > 0:
+            for person in data["data"]["relationships"]["participants"]["data"]:
+                    cast.append(get_person(person["id"]))
 
         if len(data["data"]["relationships"]["stations"]["data"]) > 0:
             station  = get_station_from_stationId(data["data"]["relationships"]["stations"]["data"][0]["id"])
         else:
             station = ""
-        return { "id" : showId, "title" : title, "img" : img, "description" : description, "shortDescription" : shortDescription, "author" : author, "source" : source, "cast" : cast, "station" : station }
+        return { "id" : showId, "title" : title, "img" : img, "description" : description, "shortDescription" : shortDescription, "director" : author, "source" : source, "cast" : cast, "station" : station }
     else:
         xbmcgui.Dialog().notification("ČRo","Problém při získání dat o pořadu", xbmcgui.NOTIFICATION_ERROR, 4000)
         sys.exit()    
 
-def get_person(personId):
-    data = call_api(url = "https://api.mujrozhlas.cz/persons/" + personId)
-    if "err" in data:
-        xbmcgui.Dialog().notification("ČRo","Problém při získání dat o pořadu", xbmcgui.NOTIFICATION_ERROR, 4000)
-        sys.exit()
-    if "data" in data and len(data["data"]) > 0 and "attributes" in data["data"]:
-        return data["data"]["attributes"]["title"]
-    else:
-        xbmcgui.Dialog().notification("ČRo","Problém při získání dat o pořadu", xbmcgui.NOTIFICATION_ERROR, 4000)
-        sys.exit() 

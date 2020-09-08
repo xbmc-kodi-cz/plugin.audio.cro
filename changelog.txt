@@ -1,3 +1,12 @@
+v1.0.3 (2020-09-08)
+- přidány údaje o obsazení pořadů
+- u témat přidané dynamické nabídky pořadů
+- přidané mazání vyhledávaných řetězců
+- úprava titulu v metadatech epizod aby se korektně zobrazoval v seznamu stop, přidání data vysílání
+- přidání oblíbených pořadů
+- oprava vyhledávání
+- přidání stránkování u zobrazení epizod pořadu, u stránkování odstraněná položka předchozí stránka
+
 v1.0.2 (2020-09-07)
 - přidání informace o dílech, pokud jsou k dispozici
 

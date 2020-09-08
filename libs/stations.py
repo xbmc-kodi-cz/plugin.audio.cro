@@ -87,7 +87,6 @@ def toogle_station(stationId):
         xbmcgui.Dialog().notification("ČRo","Problém při uložení stanic", xbmcgui.NOTIFICATION_ERROR, 4000)
     xbmc.executebuiltin('Container.Refresh')
 
-
 def list_stations(label):
     xbmcplugin.setPluginCategory(_handle, label)     
     stations, stations_nums  = get_stations(filtered=0)
