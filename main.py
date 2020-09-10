@@ -14,7 +14,7 @@ from libs.program import list_program, list_program_week, list_program_day, prog
 from libs.topics import list_topics, list_topic, list_topic_recommended
 from libs.shows import list_show, list_shows_menu, list_shows_stations, list_shows_stations_shows
 from libs.search import list_search, list_search_title, list_search_person, do_search, do_search_person, delete_search, delete_search_person
-from libs.favourites import list_favourites, add_favourites, delete_favourites
+from libs.favourites import list_favourites, add_favourites, delete_favourites, list_favourites_new, set_listened_all
 from libs.stations import list_stations, toogle_station
 from libs.player import play
 
@@ -46,6 +46,11 @@ def list_menu():
     list_item = xbmcgui.ListItem(label="Oblíbené pořady")
     url = get_url(action='list_favourites', label = "Oblíbené")  
     xbmcplugin.addDirectoryItem(_handle, url, list_item, True)    
+
+    if addon.getSetting("hide_favourites_new") == "false":
+        list_item = xbmcgui.ListItem(label="Novinky oblíbených pořadů")
+        url = get_url(action='list_favourites_new', label = "Novinky")  
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)       
 
     if addon.getSetting("hide_stations_settings") == "false":
         list_item = xbmcgui.ListItem(label="Nastavení stanic")
@@ -85,7 +90,10 @@ def router(paramstring):
             list_shows_stations_shows(params["stationId"], params["page"], params["label"])  
 
         elif params['action'] == 'list_show':
-            list_show(params["showId"], params["page"], params["label"])   
+            if "mark_new" in params:
+                list_show(params["showId"], params["page"], params["label"], params["mark_new"])   
+            else:
+                list_show(params["showId"], params["page"], params["label"])   
 
         elif params['action'] == 'list_search':
             list_search(params["label"])
@@ -108,6 +116,10 @@ def router(paramstring):
             add_favourites(params["showId"])                    
         elif params['action'] == 'delete_favourites':
             delete_favourites(params["showId"])     
+        elif params['action'] == 'list_favourites_new':
+            list_favourites_new(params["label"])                  
+        elif params['action'] == 'set_listened_all':
+            set_listened_all(params["showId"])
 
         elif params['action'] == 'list_stations':
             list_stations(params["label"])
@@ -115,7 +127,7 @@ def router(paramstring):
             toogle_station(params["stationId"])
 
         elif params['action'] == 'play':
-            play(params["url"])
+            play(params["url"], params["showId"], params["episodeId"])
 
         else:
             raise ValueError('Neznámý parametr: {0}!'.format(paramstring))

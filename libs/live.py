@@ -28,7 +28,7 @@ def list_live(label):
         else:
             title = stations[stations_nums[num]]["title"]
         list_item = xbmcgui.ListItem(label=title)
-        url = get_url(action='play', url =  urls[stations[stations_nums[num]]["id"]])  
+        url = get_url(action='play', url =  urls[stations[stations_nums[num]]["id"]], showId = None, episodeId = None)  
         list_item.setArt({ "thumb" : stations[stations_nums[num]]["img"], "icon" : stations[stations_nums[num]]["img"] })
         if len(info) > 0:
             list_item.setInfo("video", info)

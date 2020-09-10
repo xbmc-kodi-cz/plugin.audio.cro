@@ -7,14 +7,15 @@ import xbmcaddon
 import xbmc
 
 from libs.utils import call_api
+from libs.favourites import get_favourites, set_listened
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
-def play(url):
+def play(url, showId, episodeId):
+    favourites = get_favourites()
+    if showId in favourites:
+        set_listened(episodeId, showId)
     list_item = xbmcgui.ListItem(path = url)
     list_item.setContentLookup(False)
     xbmcplugin.setResolvedUrl(_handle, True, list_item)
-
-
-

@@ -1,3 +1,8 @@
+v1.0.4 (2020-09-10)
+- úprava jména položky na přidání do oblíbených pořadů v kontextovém menu
+- oprava popisu v záhlaví v nabídce Pořady
+- přidány novinek v oblíbených pořadech
+
 v1.0.3 (2020-09-08)
 - přidány údaje o obsazení pořadů
 - u témat přidané dynamické nabídky pořadů
