@@ -1,3 +1,7 @@
+v1.0.7 (2020-09-11)
+- přesun položek z oblíbených pořadů do hlavního menu
+- doplnění možnosti přidat pořad rovnou do ostatních oblíbených
+
 v1.0.6 (2020-09-11)
 - oprava odstraňování pořadů z oblíbených
 

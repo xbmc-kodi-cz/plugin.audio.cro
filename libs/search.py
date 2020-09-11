@@ -85,7 +85,9 @@ def do_search(query, label):
                 list_item.setInfo( "video", { "title" : show["title"], "director" : [show["director"]] , "plot" : show["description"], "studio" : show["station"] })
                 if len(show["cast"]) > 0:
                     list_item.setInfo( "video", { "cast" : show["cast"] })                
-                menus = [("Přidat k oblíbeným pořadům", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + ")")]
+                menus = [("Přidat k oblíbeným pořadům", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + "&others=0)"),
+                         ("Přidat k ostatním obl. pořadům", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + "&others=1)")
+                        ]
                 list_item.addContextMenuItems(menus)
                 url = get_url(action='list_show', showId = show["id"], page = 1, label = show["title"].encode("utf-8"))  
                 xbmcplugin.addDirectoryItem(_handle, url, list_item, True)              

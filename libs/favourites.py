@@ -62,14 +62,6 @@ def list_favourites(label, others = 0):
     favourites = get_favourites(int(others))
     favourites_ordered = {}
 
-    if others == 0:
-        list_item = xbmcgui.ListItem(label="Nejnovější epizody oblíbených pořadů")
-        url = get_url(action='list_favourites_new', label = "Nejnovější")  
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)       
-        list_item = xbmcgui.ListItem(label="Ostatní oblíbené pořady")
-        url = get_url(action='list_favourites', label = "Ostatní", others = 1)  
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)          
-
     for key in favourites:
         favourites_ordered.update({ key : favourites[key]["title"] })
     for showId in sorted(favourites_ordered, key=favourites_ordered.get):
@@ -121,12 +113,14 @@ def delete_favourites(showId):
             xbmcgui.Dialog().notification("ČRo","Pořad byl odebrán z oblíbených", xbmcgui.NOTIFICATION_INFO, 4000)            
         xbmc.executebuiltin('Container.Refresh')
 
-def add_favourites(showId):
+def add_favourites(showId, others):
     filename = addon_userdata_dir + "favourites.txt"
     favourites = get_favourites(others = -1)
     err = 0
     if showId not in favourites.keys():
         show = get_show(showId)
+        if int(others) == 1:
+            show.update({ "others" : 1 })
         favourites.update({ showId : show })
         try:
             with codecs.open(filename, "w", encoding="utf-8") as file:

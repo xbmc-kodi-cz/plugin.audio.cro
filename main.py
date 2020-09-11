@@ -14,7 +14,7 @@ from libs.program import list_program, list_program_week, list_program_day, prog
 from libs.topics import list_topics, list_topic, list_topic_recommended
 from libs.shows import list_show, list_shows_menu, list_shows_stations, list_shows_stations_shows
 from libs.search import list_search, list_search_title, list_search_person, do_search, do_search_person, delete_search, delete_search_person
-from libs.favourites import list_favourites, add_favourites, delete_favourites, list_favourites_new, set_listened_all, set_others
+from libs.favourites import list_favourites, add_favourites, delete_favourites, list_favourites_new, set_listened_all, set_others, get_favourites
 from libs.stations import list_stations, toogle_station
 from libs.player import play
 
@@ -45,7 +45,19 @@ def list_menu():
 
     list_item = xbmcgui.ListItem(label="Oblíbené pořady")
     url = get_url(action='list_favourites', label = "Oblíbené")  
-    xbmcplugin.addDirectoryItem(_handle, url, list_item, True)    
+    xbmcplugin.addDirectoryItem(_handle, url, list_item, True)   
+
+    others_favourites = get_favourites(others = 1)
+    if len(others_favourites) > 0:
+        list_item = xbmcgui.ListItem(label="Ostatní oblíbené pořady")
+        url = get_url(action='list_favourites', label = "Ostatní", others = 1)  
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)         
+
+    if addon.getSetting("hide_favourites_new") == "false":
+        list_item = xbmcgui.ListItem(label="Nejnovější epizody oblíbených pořadů")
+        url = get_url(action='list_favourites_new', label = "Nejnovější")  
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)       
+
 
     if addon.getSetting("hide_stations_settings") == "false":
         list_item = xbmcgui.ListItem(label="Nastavení stanic")
@@ -111,7 +123,7 @@ def router(paramstring):
             else:
                 list_favourites(params["label"])        
         elif params['action'] == 'add_favourites':
-            add_favourites(params["showId"])                    
+            add_favourites(params["showId"], params["others"])                    
         elif params['action'] == 'delete_favourites':
             delete_favourites(params["showId"])     
         elif params['action'] == 'list_favourites_new':

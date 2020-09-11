@@ -54,7 +54,9 @@ def list_shows_stations_shows(stationId, page, label):
                     cast.append(get_person(person["id"]))
                 list_item.setInfo( "video", { "cast" : cast })            
             url = get_url(action='list_show', showId = show["id"], page = 1, label = show["attributes"]["title"].encode("utf-8"))  
-            menus = [("Přidat k oblíbeným pořadům", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + ")")]
+            menus = [("Přidat k oblíbeným pořadům", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + "&others=0)"),
+                     ("Přidat k ostatním obl. pořadům", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + "&others=1)")
+                    ]
             list_item.addContextMenuItems(menus)
             xbmcplugin.addDirectoryItem(_handle, url, list_item, True)        
         if page * page_size <= items_count:
