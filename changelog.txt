@@ -1,3 +1,6 @@
+v1.0.6 (2020-09-11)
+- oprava odstraňování pořadů z oblíbených
+
 v1.0.5 (2020-09-11)
 - přidány ostatní oblíbené pořady (nesledují se nové epizody), přesouvat lze přes kontextové menu
 - přesun novinek v oblíbených pořadech do Oblíbených pořadů

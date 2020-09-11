@@ -106,7 +106,7 @@ def list_favourites(label, others = 0):
 
 def delete_favourites(showId):
     filename = addon_userdata_dir + "favourites.txt"
-    favourites = get_favourites()
+    favourites = get_favourites(others = -1)
     err = 0
     if showId in favourites.keys():
         del favourites[showId]
@@ -120,11 +120,10 @@ def delete_favourites(showId):
         if err == 0:
             xbmcgui.Dialog().notification("ČRo","Pořad byl odebrán z oblíbených", xbmcgui.NOTIFICATION_INFO, 4000)            
         xbmc.executebuiltin('Container.Refresh')
-    xbmcgui.Dialog().notification("ČRo","Odstraňovaný pořad nebyl nalezen", xbmcgui.NOTIFICATION_ERROR, 4000)
 
 def add_favourites(showId):
     filename = addon_userdata_dir + "favourites.txt"
-    favourites = get_favourites()
+    favourites = get_favourites(others = -1)
     err = 0
     if showId not in favourites.keys():
         show = get_show(showId)
@@ -172,7 +171,7 @@ def set_others(showId, val):
 def list_favourites_new(label):
     items = int(addon.getSetting("favourites_new_count"))
     xbmcplugin.setPluginCategory(_handle, label)        
-    favourites = get_favourites()
+    favourites = get_favourites(others = 0)
     episodes = {}
     episodes_ordered = {}
     for showId in favourites:

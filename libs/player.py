@@ -13,7 +13,7 @@ _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
 def play(url, showId, episodeId):
-    favourites = get_favourites()
+    favourites = get_favourites(others = 0)
     if showId in favourites:
         set_listened(episodeId, showId)
     list_item = xbmcgui.ListItem(path = url)
