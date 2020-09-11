@@ -3,6 +3,11 @@
 Kodi doplněk Český rozhlas (ČRo) upožnuje poslech pořadů archivu stanic Českého rozhlasu 
 <p>
 <br>
+v1.0.5 (2020-09-11)<br>
+- přidány ostatní oblíbené pořady (nesledují se nové epizody), přesouvat lze přes kontextové menu<br>
+- přesun novinek v oblíbených pořadech do Oblíbených pořadů<br>
+- oprava označování nových epizod u stránkování, aktualizace označení po přehrání<br><br>
+
 v1.0.4 (2020-09-10)<br>
 - úprava jména položky na přidání do oblíbených pořadů v kontextovém menu<br>
 - oprava popisu v záhlaví v nabídce Pořady<br>

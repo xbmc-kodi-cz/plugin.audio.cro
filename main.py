@@ -14,7 +14,7 @@ from libs.program import list_program, list_program_week, list_program_day, prog
 from libs.topics import list_topics, list_topic, list_topic_recommended
 from libs.shows import list_show, list_shows_menu, list_shows_stations, list_shows_stations_shows
 from libs.search import list_search, list_search_title, list_search_person, do_search, do_search_person, delete_search, delete_search_person
-from libs.favourites import list_favourites, add_favourites, delete_favourites, list_favourites_new, set_listened_all
+from libs.favourites import list_favourites, add_favourites, delete_favourites, list_favourites_new, set_listened_all, set_others
 from libs.stations import list_stations, toogle_station
 from libs.player import play
 
@@ -46,11 +46,6 @@ def list_menu():
     list_item = xbmcgui.ListItem(label="Oblíbené pořady")
     url = get_url(action='list_favourites', label = "Oblíbené")  
     xbmcplugin.addDirectoryItem(_handle, url, list_item, True)    
-
-    if addon.getSetting("hide_favourites_new") == "false":
-        list_item = xbmcgui.ListItem(label="Novinky oblíbených pořadů")
-        url = get_url(action='list_favourites_new', label = "Novinky")  
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)       
 
     if addon.getSetting("hide_stations_settings") == "false":
         list_item = xbmcgui.ListItem(label="Nastavení stanic")
@@ -111,7 +106,10 @@ def router(paramstring):
             delete_search_person(params["query"])            
 
         elif params['action'] == 'list_favourites':
-            list_favourites(params["label"])        
+            if "others" in params:
+                list_favourites(params["label"], params["others"])        
+            else:
+                list_favourites(params["label"])        
         elif params['action'] == 'add_favourites':
             add_favourites(params["showId"])                    
         elif params['action'] == 'delete_favourites':
@@ -120,6 +118,8 @@ def router(paramstring):
             list_favourites_new(params["label"])                  
         elif params['action'] == 'set_listened_all':
             set_listened_all(params["showId"])
+        elif params['action'] == 'set_others':
+            set_others(params["showId"], params["val"])            
 
         elif params['action'] == 'list_stations':
             list_stations(params["label"])

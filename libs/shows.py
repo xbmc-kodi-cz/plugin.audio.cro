@@ -101,10 +101,10 @@ def list_show(showId, page, label, mark_new = 0):
                 xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
         if page * page_size <= items_count:
             list_item = xbmcgui.ListItem(label="Následující strana")
-            url = get_url(action='list_show', showId =  showId, page = page + 1, label = label)  
+            url = get_url(action='list_show', showId =  showId, page = page + 1, label = label, mark_new = mark_new)  
             xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
 
-        xbmcplugin.endOfDirectory(_handle)
+        xbmcplugin.endOfDirectory(_handle, cacheToDisc = False)
     else:
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
         sys.exit()

@@ -1,4 +1,4 @@
-﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.0.4">
+﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.0.5">
   <extension library="main.py" point="xbmc.python.pluginsource">
     <provides>audio</provides>
   </extension>
@@ -14,6 +14,11 @@
     <platform>all</platform>
     <source>https://github.com/waladir/plugin.audio.cro</source>
     <news>
+v1.0.5 (2020-09-11)
+- přidány ostatní oblíbené pořady (nesledují se nové epizody), přesouvat lze přes kontextové menu
+- přesun novinek v oblíbených pořadech do Oblíbených pořadů
+- oprava označování nových epizod u stránkování, aktualizace označení po přehrání
+
 v1.0.4 (2020-09-10)
 - úprava jména položky na přidání do oblíbených pořadů v kontextovém menu
 - oprava popisu v záhlaví v nabídce Pořady

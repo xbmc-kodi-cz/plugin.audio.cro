@@ -57,19 +57,27 @@ def migrate_db(version):
     #   db.commit()           
     return version
 
-def list_favourites(label):
+def list_favourites(label, others = 0):
     xbmcplugin.setPluginCategory(_handle, label)        
-    favourites = get_favourites()
+    favourites = get_favourites(int(others))
     favourites_ordered = {}
+
+    if others == 0:
+        list_item = xbmcgui.ListItem(label="Nejnovější epizody oblíbených pořadů")
+        url = get_url(action='list_favourites_new', label = "Nejnovější")  
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)       
+        list_item = xbmcgui.ListItem(label="Ostatní oblíbené pořady")
+        url = get_url(action='list_favourites', label = "Ostatní", others = 1)  
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)          
+
     for key in favourites:
         favourites_ordered.update({ key : favourites[key]["title"] })
     for showId in sorted(favourites_ordered, key=favourites_ordered.get):
         show = favourites[showId]
-        
-        if addon.getSetting("hide_unlistened_favourites") == "false":
+        if addon.getSetting("hide_unlistened_favourites") == "false" and others == 0:
             unlistened = get_unlistened_count(showId)
             if unlistened > 0 :
-                list_item = xbmcgui.ListItem(label=show["title"] + " (" + str(unlistened) + " nových)")
+                list_item = xbmcgui.ListItem(label=show["title"] + " (" + str(unlistened) + (" nových)").decode("utf-8"))
             else:
                 list_item = xbmcgui.ListItem(label=show["title"])            
         else:
@@ -78,17 +86,23 @@ def list_favourites(label):
         list_item.setInfo( "video", { "title" : show["title"], "director" : [show["director"]], "plot" : show["description"], "studio" : show["station"] })
         if len(show["cast"]) > 0:
             list_item.setInfo( "video", { "cast" : show["cast"] })   
+        
+       
         menus = [("Odstranit z oblíbených", "RunPlugin(plugin://plugin.audio.cro?action=delete_favourites&showId=" + str(show["id"]) + ")")]
-        if addon.getSetting("hide_unlistened_favourites") == "false":
+        if others == 0:
+            menus.append(("Přesunout do ostatních", "RunPlugin(plugin://plugin.audio.cro?action=set_others&showId=" + str(show["id"]) + "&val=1" + ")"))
+        else:
+            menus.append(("Přesunout z ostatních", "RunPlugin(plugin://plugin.audio.cro?action=set_others&showId=" + str(show["id"]) + "&val=0" + ")"))
+        if addon.getSetting("hide_unlistened_favourites") == "false" and others == 0:
             menus.append(("Označit epizody jako poslechnuté", "RunPlugin(plugin://plugin.audio.cro?action=set_listened_all&showId=" + str(show["id"]) + ")"))
         list_item.addContextMenuItems(menus)
-        if addon.getSetting("hide_unlistened_favourites") == "false":
+        if addon.getSetting("hide_unlistened_favourites") == "false" and others == 0:
             url = get_url(action='list_show', showId = show["id"], page = 1, label = show["title"].encode("utf-8"), mark_new = 1)   
         else:
             url = get_url(action='list_show', showId = show["id"], page = 1, label = show["title"].encode("utf-8"), mark_new = 0)                            
         list_item.setContentLookup(False) 
         xbmcplugin.addDirectoryItem(_handle, url, list_item, True)      
-    xbmcplugin.endOfDirectory(_handle) 
+    xbmcplugin.endOfDirectory(_handle, cacheToDisc = False) 
 
 def delete_favourites(showId):
     filename = addon_userdata_dir + "favourites.txt"
@@ -108,7 +122,6 @@ def delete_favourites(showId):
         xbmc.executebuiltin('Container.Refresh')
     xbmcgui.Dialog().notification("ČRo","Odstraňovaný pořad nebyl nalezen", xbmcgui.NOTIFICATION_ERROR, 4000)
 
-
 def add_favourites(showId):
     filename = addon_userdata_dir + "favourites.txt"
     favourites = get_favourites()
@@ -126,7 +139,7 @@ def add_favourites(showId):
         if err == 0:
             xbmcgui.Dialog().notification("ČRo","Pořad byl přidán do oblíbených", xbmcgui.NOTIFICATION_INFO, 4000)            
 
-def get_favourites():
+def get_favourites(others = 0):
     filename = addon_userdata_dir + "favourites.txt"
     try:
         with open(filename, "r") as file:
@@ -135,7 +148,26 @@ def get_favourites():
                 data = json.loads(item)
     except IOError:
         data = {}
+    for key in data.keys():
+        if others == 0 and "others" in data[key] and data[key]["others"] == 1:
+            del data[key]
+        if others == 1 and ("others" not in data[key] or data[key]["others"] == 0):
+            del data[key]
     return data    
+
+def set_others(showId, val):
+    filename = addon_userdata_dir + "favourites.txt"
+    favourites = get_favourites(others = -1)
+    for key in favourites:
+        if key == showId:
+            favourites[key].update({ "others" : int(val) })
+    try:
+        with codecs.open(filename, "w", encoding="utf-8") as file:
+            data = json.dumps(favourites)
+            file.write('%s\n' % data)
+    except IOError:
+        xbmcgui.Dialog().notification("ČRo","Problém při uložení oblíbených pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
+    xbmc.executebuiltin('Container.Refresh')        
 
 def list_favourites_new(label):
     items = int(addon.getSetting("favourites_new_count"))
