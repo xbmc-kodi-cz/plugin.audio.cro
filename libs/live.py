@@ -28,8 +28,12 @@ def list_live(label):
         else:
             title = stations[stations_nums[num]]["title"]
         list_item = xbmcgui.ListItem(label=title)
-        url = get_url(action='play_live', url =  urls[stations[stations_nums[num]]["id"]], title = title.encode("utf-8"), img = stations[stations_nums[num]]["img"])  
-        list_item.setArt({ "thumb" : stations[stations_nums[num]]["img"], "icon" : stations[stations_nums[num]]["img"] })
+        if "img" in stations[stations_nums[num]] and len(stations[stations_nums[num]]["img"]) > 0:
+            img = stations[stations_nums[num]]["img"]
+            list_item.setArt({ "thumb" : img, "icon" : img })
+        else:
+            img = "xxx"       
+        url = get_url(action='play_live', url =  urls[stations[stations_nums[num]]["id"]], title = title.encode("utf-8"), img = img)  
         if len(info) > 0:
             list_item.setInfo("video", info)
         list_item.setProperty("IsPlayable", "true")

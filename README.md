@@ -3,6 +3,9 @@
 Kodi doplněk Český rozhlas (ČRo) upožnuje poslech pořadů archivu stanic Českého rozhlasu 
 <p>
 <br>
+v1.0.9 (2020-09-13)<br>
+- oprava přehrávání živého vysílání u stanic bez ikony<br><br>
+
 v1.0.8 (2020-09-12)<br>
 - opravené přehrávání ve widgetech témat<br>
 - živé vysílání se spouští přes playlist (zůstává otevřený seznam stanic)<br><br>
