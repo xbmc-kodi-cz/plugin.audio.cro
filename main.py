@@ -16,7 +16,7 @@ from libs.shows import list_show, list_shows_menu, list_shows_stations, list_sho
 from libs.search import list_search, list_search_title, list_search_person, do_search, do_search_person, delete_search, delete_search_person
 from libs.favourites import list_favourites, add_favourites, delete_favourites, list_favourites_new, set_listened_all, set_others, get_favourites
 from libs.stations import list_stations, toogle_station
-from libs.player import play
+from libs.player import play, play_live
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
@@ -140,6 +140,8 @@ def router(paramstring):
 
         elif params['action'] == 'play':
             play(params["url"], params["showId"], params["episodeId"])
+        elif params['action'] == 'play_live':
+            play_live(params["url"], params["title"], params["img"])
 
         else:
             raise ValueError('Neznámý parametr: {0}!'.format(paramstring))

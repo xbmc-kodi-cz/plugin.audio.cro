@@ -104,19 +104,29 @@ def list_topic_recommended(topicId, filtr, label):
                             url = get_url(action='list_show', showId = show["id"], page = 1, label = show["title"].encode("utf-8"))  
                             xbmcplugin.addDirectoryItem(_handle, url, list_item, True)                                
                         if item["entity"]["type"] == "episode":
+                            show = get_show(item["entity"]["relationships"]["show"]["data"]["id"])
                             starttime =  parse_date(item["entity"]["attributes"]["since"])
                             title = item["entity"]["attributes"]["mirroredShow"]["title"] + " - " + item["entity"]["attributes"]["title"] + " (" + starttime.strftime("%d.%m.%Y %H:%M") + ")"
-                            url = item["entity"]["attributes"]["audioLinks"][0]["url"]
                             list_item = xbmcgui.ListItem(label=title)
+                            url = item["entity"]["attributes"]["audioLinks"][0]["url"]
+                            list_item.setArt({ "thumb" : show["img"], "icon" : show["img"] })
+                            list_item.setInfo( "video", { "tvshowtitle" : show["title"], "title" : title, "aired" : starttime.strftime("%Y-%m-%d"), "director" : [show["director"]], "plot" : show["description"], "studio" : show["station"] })
+                            if len(show["cast"]) > 0:
+                                list_item.setInfo( "video", { "cast" : show["cast"] })   
                             list_item.setProperty("IsPlayable", "true")
                             list_item.setContentLookup(False)
-                            url = get_url(action='play', url = url)  
+                            url = get_url(action='play', url = url, showId = show["id"], episodeId = item["entity"]["id"])  
                             xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
                     if "type" in item and item["type"] == "episode":
+                        show = get_show(item["relationships"]["show"]["data"]["id"])
                         starttime =  parse_date(item["attributes"]["since"])
                         title = item["attributes"]["mirroredShow"]["title"] + " - " + item["attributes"]["title"] + " (" + starttime.strftime("%d.%m.%Y %H:%M") + ")"
                         url = item["attributes"]["audioLinks"][0]["url"]
                         list_item = xbmcgui.ListItem(label=title)
+                        list_item.setArt({ "thumb" : show["img"], "icon" : show["img"] })
+                        list_item.setInfo( "video", { "tvshowtitle" : show["title"], "title" : title, "aired" : starttime.strftime("%Y-%m-%d"), "director" : [show["director"]], "plot" : show["description"], "studio" : show["station"] })
+                        if len(show["cast"]) > 0:
+                            list_item.setInfo( "video", { "cast" : show["cast"] })   
                         list_item.setProperty("IsPlayable", "true")
                         list_item.setContentLookup(False)
                         url = get_url(action='play', url = url)  

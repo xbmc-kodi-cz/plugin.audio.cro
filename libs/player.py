@@ -19,3 +19,12 @@ def play(url, showId, episodeId):
     list_item = xbmcgui.ListItem(path = url)
     list_item.setContentLookup(False)
     xbmcplugin.setResolvedUrl(_handle, True, list_item)
+
+def play_live(url, title, img):
+    list_item = xbmcgui.ListItem(label = title, path = url)
+    list_item.setArt({ "thumb" : img, "icon" : img })
+    xbmcplugin.setResolvedUrl(_handle, True, list_item)
+    playlist=xbmc.PlayList(1)
+    playlist.clear()
+    xbmc.PlayList(1).add(url, list_item)
+    xbmc.Player().play(playlist)

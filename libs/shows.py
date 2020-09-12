@@ -72,7 +72,7 @@ def list_show(showId, page, label, mark_new = 0):
     page = int(page)
     page_size = 30
     show = get_show(showId)
-    xbmcplugin.setPluginCategory(_handle, str(page))    
+    xbmcplugin.setPluginCategory(_handle, label)    
     data = call_api(url = "https://api.mujrozhlas.cz/shows/" + showId + "/episodes?sort=-since&page[limit]=" + str(page_size) + "&page[offset]=" + str((page-1)*page_size))
     if "err" in data:
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
