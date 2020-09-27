@@ -23,8 +23,11 @@ _handle = int(sys.argv[1])
 addon = xbmcaddon.Addon(id='plugin.audio.cro')
 
 def list_menu():
+    icons_dir = os.path.join(addon.getAddonInfo('path'), 'resources','images')
+
     list_item = xbmcgui.ListItem(label="Živě")
     url = get_url(action='list_live', label = "Živě")  
+    list_item.setArt({ "thumb" : os.path.join(icons_dir , 'live.png'), "icon" : os.path.join(icons_dir , 'live.png') })    
     xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
 
     # list_item = xbmcgui.ListItem(label="Program")
@@ -33,35 +36,42 @@ def list_menu():
 
     list_item = xbmcgui.ListItem(label="Pořady")
     url = get_url(action='list_shows_stations', label = "Pořady")  
+    list_item.setArt({ "thumb" : os.path.join(icons_dir , 'shows.png'), "icon" : os.path.join(icons_dir , 'shows.png') })
     xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
 
     list_item = xbmcgui.ListItem(label="Témata")
     url = get_url(action='list_topics', label = "Témata")  
+    list_item.setArt({ "thumb" : os.path.join(icons_dir , 'themes.png'), "icon" : os.path.join(icons_dir , 'themes.png') })
     xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
 
     list_item = xbmcgui.ListItem(label="Vyhledávání")
     url = get_url(action='list_search_title', label = "Vyhledávání")  
+    list_item.setArt({ "thumb" : os.path.join(icons_dir , 'search.png'), "icon" : os.path.join(icons_dir , 'search.png') })
     xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
 
     list_item = xbmcgui.ListItem(label="Oblíbené pořady")
     url = get_url(action='list_favourites', label = "Oblíbené")  
+    list_item.setArt({ "thumb" : os.path.join(icons_dir , 'favourites.png'), "icon" : os.path.join(icons_dir , 'favourites.png') })  
     xbmcplugin.addDirectoryItem(_handle, url, list_item, True)   
 
     others_favourites = get_favourites(others = 1)
     if len(others_favourites) > 0:
         list_item = xbmcgui.ListItem(label="Ostatní oblíbené pořady")
-        url = get_url(action='list_favourites', label = "Ostatní", others = 1)  
+        url = get_url(action='list_favourites', label = "Ostatní", others = 1)
+        list_item.setArt({ "thumb" : os.path.join(icons_dir , 'favourites_others.png'), "icon" : os.path.join(icons_dir , 'favourites_others.png') })  
         xbmcplugin.addDirectoryItem(_handle, url, list_item, True)         
 
     if addon.getSetting("hide_favourites_new") == "false":
         list_item = xbmcgui.ListItem(label="Nejnovější epizody oblíbených pořadů")
         url = get_url(action='list_favourites_new', label = "Nejnovější")  
+        list_item.setArt({ "thumb" : os.path.join(icons_dir , 'favourites_new.png'), "icon" : os.path.join(icons_dir , 'favourites_new.png') })  
         xbmcplugin.addDirectoryItem(_handle, url, list_item, True)       
 
 
     if addon.getSetting("hide_stations_settings") == "false":
         list_item = xbmcgui.ListItem(label="Nastavení stanic")
         url = get_url(action='list_stations', label = "Nastavení stanic")  
+        list_item.setArt({ "thumb" : os.path.join(icons_dir , 'settings.png'), "icon" : os.path.join(icons_dir , 'settings.png') })
         xbmcplugin.addDirectoryItem(_handle, url, list_item, True)    
 
     xbmcplugin.endOfDirectory(_handle)

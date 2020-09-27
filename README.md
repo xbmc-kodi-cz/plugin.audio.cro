@@ -3,6 +3,10 @@
 Kodi doplněk Český rozhlas (ČRo) upožnuje poslech pořadů archivu stanic Českého rozhlasu 
 <p>
 <br>
+
+v1.1.0 (2020-09-27)<br>
+- nové logo (díky delfin-chikago) a ikony<br><br>
+
 v1.0.9 (2020-09-13)<br>
 - oprava přehrávání živého vysílání u stanic bez ikony<br><br>
 

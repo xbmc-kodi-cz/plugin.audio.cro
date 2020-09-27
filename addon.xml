@@ -1,4 +1,4 @@
-﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.0.9">
+﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.1.0">
   <extension library="main.py" point="xbmc.python.pluginsource">
     <provides>audio</provides>
   </extension>
@@ -16,12 +16,17 @@ Další informace a podporu k doplňku najdete na fóru www.xbmc-kodi.cz (https:
 Poslech pořadů archivu stanic Českého rozhlasu
 Poděkování:
 * @JiRo, @meda i ostatním za spoustu užitečných námětů a pomoc s ostraňováním chyb
+* @delfin-chikago za logo doplňku
 
 Další informace a podporu k doplňku najdete na fóru www.xbmc-kodi.cz (https://www.xbmc-kodi.cz/prispevek-cro)
     </description>
     <platform>all</platform>
     <source>https://github.com/waladir/plugin.audio.cro</source>
     <news>
+
+v1.1.0 (2020-09-27)
+- nové logo (díky delfin-chikago) a ikony
+
 v1.0.9 (2020-09-13)
 - oprava přehrávání živého vysílání u stanic bez ikony
 
