@@ -33,12 +33,13 @@ def list_live(label):
             list_item.setArt({ "thumb" : img, "icon" : img })
         else:
             img = "xxx"       
+
         url = get_url(action='play_live', url =  urls[stations[stations_nums[num]]["id"]], title = title.encode("utf-8"), img = img)  
+
         if len(info) > 0:
-            list_item.setInfo("video", info)
-        list_item.setProperty("IsPlayable", "true")
-        list_item.setContentLookup(False)
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+            list_item.setInfo("music", info)
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
+
     xbmcplugin.endOfDirectory(_handle)        
 
 def get_current_schedule():

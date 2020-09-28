@@ -1,3 +1,7 @@
+v1.1.1 (2020-09-28)
+- přejmenování loga doplňku
+- zrychlení spuštění přehrávání u živého vysílání
+
 v1.1.0 (2020-09-27)
 - nové logo (díky delfin-chikago) a ikony
 
