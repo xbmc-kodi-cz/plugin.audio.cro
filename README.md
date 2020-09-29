@@ -3,6 +3,10 @@
 Kodi doplněk Český rozhlas (ČRo) upožnuje poslech pořadů archivu stanic Českého rozhlasu 
 <p>
 <br>
+
+v1.1.2 (2020-09-30)<br>
+- přidaná možnost nastavení počtu pořadů nebo epizod na stránku (default 20)<br><br>
+
 v1.1.1 (2020-09-28)<br>
 - přejmenování loga doplňku<br>
 - zrychlení spuštění přehrávání u živého vysílání<br><br>

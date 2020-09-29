@@ -36,7 +36,7 @@ def list_shows_stations(label):
 def list_shows_stations_shows(stationId, page, label):
     xbmcplugin.setPluginCategory(_handle, label)   
     page = int(page)
-    page_size = 30
+    page_size = int(addon.getSetting("page_size"))
     station  = get_station_from_stationId(stationId)
     data = call_api(url = "https://api.mujrozhlas.cz/stations/" + stationId + "/shows?page[limit]=" + str(page_size) +  "&page[offset]=" + str((page-1)*page_size))
     if "err" in data:
@@ -70,7 +70,7 @@ def list_shows_stations_shows(stationId, page, label):
 
 def list_show(showId, page, label, mark_new = 0):
     page = int(page)
-    page_size = 30
+    page_size = int(addon.getSetting("page_size"))
     show = get_show(showId)
     xbmcplugin.setPluginCategory(_handle, label)    
     data = call_api(url = "https://api.mujrozhlas.cz/shows/" + showId + "/episodes?sort=-since&page[limit]=" + str(page_size) + "&page[offset]=" + str((page-1)*page_size))
