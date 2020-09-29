@@ -2,6 +2,7 @@
 <settings>
 	<category label="Nastavení">
         <setting label="Počet položek v historii vyhledávání" type="number" id="search_history" default="10"/>
+		<setting label="Počet pořadů/epizod na stránku" type="slider" id="page_size" range="10,5,100" default="20" option="int"/>
 		<setting label="Počet nejnovějších epizod v Novinkách obl. pořadů" type="slider" id="favourites_new_count" range="5,5,100" default="10" option="int"/>
 		<setting label="Skrýt Nastavení stanic v menu" type="bool" id="hide_stations_settings" default="false"/>
 		<setting label="Skrýt Novinky oblíbených pořadů v menu " type="bool" id="hide_favourites_new" default="false"/>		
