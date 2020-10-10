@@ -6,6 +6,11 @@ import xbmcplugin
 import xbmcaddon
 import xbmc
 
+try:
+    from xbmcvfs import translatePath
+except ImportError:
+    from xbmc import translatePath
+
 import codecs
 import json
 import time
@@ -16,7 +21,7 @@ _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
 addon = xbmcaddon.Addon(id='plugin.audio.cro')
-addon_userdata_dir = xbmc.translatePath(addon.getAddonInfo('profile'))
+addon_userdata_dir = translatePath(addon.getAddonInfo('profile'))
 
 def get_stations(filtered = 1):
     stations = {}
@@ -97,7 +102,7 @@ def list_stations(label):
             list_item = xbmcgui.ListItem(label=stations[stations_nums[num]]["title"])
         url = get_url(action='toogle_station', stationId =  stations[stations_nums[num]]["id"])  
         list_item.setArt({ "thumb" : stations[stations_nums[num]]["img"], "icon" : stations[stations_nums[num]]["img"] })
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     xbmcplugin.endOfDirectory(_handle)        
 
 def get_station_from_stationId(stationId):

@@ -6,13 +6,18 @@ import xbmcplugin
 import xbmcaddon
 import xbmc
 
+try:
+    from xbmcvfs import translatePath
+except ImportError:
+    from xbmc import translatePath
+
 import codecs
 import json
 
 from libs.utils import call_api
 
 addon = xbmcaddon.Addon(id='plugin.audio.cro')
-addon_userdata_dir = xbmc.translatePath(addon.getAddonInfo('profile'))
+addon_userdata_dir = translatePath(addon.getAddonInfo('profile'))
 
 def get_person(personId):
     filename = addon_userdata_dir + "persons.txt"

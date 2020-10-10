@@ -8,7 +8,7 @@ import xbmc
 
 from datetime import datetime, timedelta
 
-from libs.utils import get_url, call_api, parse_date, parse_datetime
+from libs.utils import get_url, call_api, parse_date, parse_datetime, encode
 from libs.stations import get_stations
 
 _url = sys.argv[0]
@@ -23,7 +23,7 @@ def list_program(label):
     stations, stations_nums  = get_stations(filtered=1)
     for num in sorted(stations_nums.keys()):
         list_item = xbmcgui.ListItem(label=stations[stations_nums[num]]["title"])
-        url = get_url(action='list_program_week', stationId = stations[stations_nums[num]]["id"], startdate = startDoW.strftime("%d.%m.%Y"), enddate = endDoW.strftime("%d.%m.%Y"), label = stations[stations_nums[num]]["title"].encode("utf-8"))  
+        url = get_url(action='list_program_week', stationId = stations[stations_nums[num]]["id"], startdate = startDoW.strftime("%d.%m.%Y"), enddate = endDoW.strftime("%d.%m.%Y"), label = encode(stations[stations_nums[num]]["title"]))  
         list_item.setArt({ "thumb" : stations[stations_nums[num]]["img"], "icon" : stations[stations_nums[num]]["img"] })
         xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
     xbmcplugin.endOfDirectory(_handle)      

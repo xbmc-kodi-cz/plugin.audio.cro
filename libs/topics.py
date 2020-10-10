@@ -8,7 +8,7 @@ import xbmc
 
 from datetime import datetime
 
-from libs.utils import get_url, call_api, parse_date
+from libs.utils import get_url, call_api, parse_date, encode
 from libs.shows import get_show
 
 _url = sys.argv[0]
@@ -26,7 +26,7 @@ def list_topics(label):
             if "attributes" in topic and "title" in topic["attributes"] and len(topic["attributes"]["title"]) > 0:
                 topicId = topic["id"]
                 list_item = xbmcgui.ListItem(label=topic["attributes"]["title"])
-                url = get_url(action='list_topic', topicId = topicId, label = label + " / " + topic["attributes"]["title"].encode("utf-8"))  
+                url = get_url(action='list_topic', topicId = topicId, label = label + " / " + encode(topic["attributes"]["title"]))  
                 list_item.setArt({ "thumb" : topic["attributes"]["asset"]["url"], "icon" : topic["attributes"]["asset"]["url"]})
                 xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
         xbmcplugin.endOfDirectory(_handle)
@@ -45,7 +45,7 @@ def list_topic(topicId, label):
         for widget in widgets:
             list_item = xbmcgui.ListItem(label=widget)
             list_item.setProperty("IsPlayable", "false")
-            url = get_url(action='list_topic_recommended', topicId = topicId, filtr = widget.encode("utf-8"),  label = label + " / " + widget.encode("utf-8"))  
+            url = get_url(action='list_topic_recommended', topicId = topicId, filtr = encode(widget),  label = label + " / " + encode(widget))  
             xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
 
         shows = {}
@@ -67,7 +67,7 @@ def list_topic(topicId, label):
                          ("Přidat k ostatním obl. pořadům", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + "&others=1)")
                         ]
                 list_item.addContextMenuItems(menus)
-                url = get_url(action='list_show', showId = show["id"], page = 1, label = show["title"].encode("utf-8"))                
+                url = get_url(action='list_show', showId = show["id"], page = 1, label = encode(show["title"]))                
                 list_item.setContentLookup(False) 
                 xbmcplugin.addDirectoryItem(_handle, url, list_item, True)              
         xbmcplugin.endOfDirectory(_handle)
@@ -83,7 +83,7 @@ def list_topic_recommended(topicId, filtr, label):
         sys.exit()
     if "data" in data and len(data["data"]) > 0 and "attributes" in data["data"] and "widgets" in data["data"]["attributes"]:
         for widget in data["data"]["attributes"]["widgets"]:
-            if "attributes" in widget and "title" in widget["attributes"] and widget["attributes"]["title"].encode("utf-8") == filtr:
+            if "attributes" in widget and "title" in widget["attributes"] and encode(widget["attributes"]["title"]) == filtr:
                 if "items" in widget["attributes"]:
                     items = widget["attributes"]["items"]
                 elif "entities" in widget["attributes"]:
@@ -101,7 +101,7 @@ def list_topic_recommended(topicId, filtr, label):
                                      ("Přidat k ostatním obl. pořadům", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + "&others=1)")
                                     ]
                             list_item.addContextMenuItems(menus)
-                            url = get_url(action='list_show', showId = show["id"], page = 1, label = show["title"].encode("utf-8"))  
+                            url = get_url(action='list_show', showId = show["id"], page = 1, label = encode(show["title"]))  
                             xbmcplugin.addDirectoryItem(_handle, url, list_item, True)                                
                         if item["entity"]["type"] == "episode":
                             show = get_show(item["entity"]["relationships"]["show"]["data"]["id"])
@@ -129,7 +129,7 @@ def list_topic_recommended(topicId, filtr, label):
                             list_item.setInfo( "video", { "cast" : show["cast"] })   
                         list_item.setProperty("IsPlayable", "true")
                         list_item.setContentLookup(False)
-                        url = get_url(action='play', url = url)  
+                        url = get_url(action='play', url = url, showId = show["id"], episodeId = item["id"])  
                         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
         xbmcplugin.endOfDirectory(_handle)
     else:

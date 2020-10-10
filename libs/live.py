@@ -8,7 +8,7 @@ import xbmc
 
 from datetime import datetime
 
-from libs.utils import get_url, call_api, parse_date
+from libs.utils import get_url, call_api, parse_date, encode
 from libs.stations import get_stations
 
 _url = sys.argv[0]
@@ -34,7 +34,7 @@ def list_live(label):
         else:
             img = "xxx"       
 
-        url = get_url(action='play_live', url =  urls[stations[stations_nums[num]]["id"]], title = title.encode("utf-8"), img = img)  
+        url = get_url(action='play_live', url =  urls[stations[stations_nums[num]]["id"]], title = encode(title), img = img)  
 
         if len(info) > 0:
             list_item.setInfo("music", info)

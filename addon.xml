@@ -1,4 +1,4 @@
-﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.1.3">
+﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.1.4">
   <extension library="main.py" point="xbmc.python.pluginsource">
     <provides>audio</provides>
   </extension>
@@ -23,6 +23,10 @@ Další informace a podporu k doplňku najdete na fóru www.xbmc-kodi.cz (https:
     <platform>all</platform>
     <source>https://github.com/waladir/plugin.audio.cro</source>
     <news>
+v1.1.4 (2020-10-10)    
+- komatibilita s Kodi 19 (Matrix)
+- oprava přehrávání některých epizod v tématech
+
 v1.1.2/3 (2020-09-30)
 - přidaná možnost nastavení počtu pořadů nebo epizod na stránku (default 20)
 

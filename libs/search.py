@@ -6,16 +6,24 @@ import xbmcplugin
 import xbmcaddon
 import xbmc
 
-from urllib import quote
+try:
+    from xbmcvfs import translatePath
+except ImportError:
+    from xbmc import translatePath
 
-from libs.utils import call_api, get_url
+try:
+    from urllib import quote
+except ImportError:
+    from urllib.parse import quote
+
+from libs.utils import call_api, get_url, encode
 from libs.shows import get_show, get_person, list_show
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
 addon = xbmcaddon.Addon(id='plugin.audio.cro')
-addon_userdata_dir = xbmc.translatePath(addon.getAddonInfo('profile'))
+addon_userdata_dir = translatePath(addon.getAddonInfo('profile'))
 
 def list_search(label):
     list_item = xbmcgui.ListItem(label="Podle názvu")
@@ -71,14 +79,14 @@ def do_search(query, label):
         save_search_history(query)
     shows = {}
     shows_ordered = {}
-
+    
     shows, shows_ordered = search_episodes(shows, shows_ordered, "title", query)
     #shows, shows_ordered = search_episodes(shows, shows_ordered, "description", query)
     shows, shows_ordered = search_shows(shows, shows_ordered, "title", query)
     #shows, shows_ordered = search_shows(shows, shows_ordered, "description", query)
 
     if len(shows) > 0:
-        for key in sorted(shows_ordered, key=shows.get):             
+        for key in sorted(shows_ordered, key=shows.get('id')):             
                 show = shows[key] 
                 list_item = xbmcgui.ListItem(label=show["title"])
                 list_item.setArt({ "thumb" : show["img"], "icon" : show["img"] })
@@ -89,7 +97,7 @@ def do_search(query, label):
                          ("Přidat k ostatním obl. pořadům", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + "&others=1)")
                         ]
                 list_item.addContextMenuItems(menus)
-                url = get_url(action='list_show', showId = show["id"], page = 1, label = show["title"].encode("utf-8"))  
+                url = get_url(action='list_show', showId = show["id"], page = 1, label = encode(show["title"]))  
                 xbmcplugin.addDirectoryItem(_handle, url, list_item, True)              
     else:
         xbmcgui.Dialog().notification("ČRo","Nic nebylo nalezeno", xbmcgui.NOTIFICATION_WARNING, 4000)

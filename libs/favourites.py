@@ -6,6 +6,11 @@ import xbmcplugin
 import xbmcaddon
 import xbmc
 
+try:
+    from xbmcvfs import translatePath
+except ImportError:
+    from xbmc import translatePath
+
 import codecs
 import json
 from datetime import datetime
@@ -13,12 +18,12 @@ import time
 import sqlite3
 
 from libs.shows import get_show
-from libs.utils import get_url, call_api, parse_date
+from libs.utils import get_url, call_api, parse_date, encode, decode
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
 addon = xbmcaddon.Addon(id='plugin.audio.cro')
-addon_userdata_dir = xbmc.translatePath(addon.getAddonInfo('profile'))
+addon_userdata_dir = translatePath(addon.getAddonInfo('profile'))
 
 current_version = 1
 def open_db():
@@ -69,7 +74,7 @@ def list_favourites(label, others = 0):
         if addon.getSetting("hide_unlistened_favourites") == "false" and others == 0:
             unlistened = get_unlistened_count(showId)
             if unlistened > 0 :
-                list_item = xbmcgui.ListItem(label=show["title"] + " (" + str(unlistened) + (" nových)").decode("utf-8"))
+                list_item = xbmcgui.ListItem(label=show["title"] + " (" + str(unlistened) + decode(" nových)"))
             else:
                 list_item = xbmcgui.ListItem(label=show["title"])            
         else:
@@ -89,9 +94,9 @@ def list_favourites(label, others = 0):
             menus.append(("Označit epizody jako poslechnuté", "RunPlugin(plugin://plugin.audio.cro?action=set_listened_all&showId=" + str(show["id"]) + ")"))
         list_item.addContextMenuItems(menus)
         if addon.getSetting("hide_unlistened_favourites") == "false" and others == 0:
-            url = get_url(action='list_show', showId = show["id"], page = 1, label = show["title"].encode("utf-8"), mark_new = 1)   
+            url = get_url(action='list_show', showId = show["id"], page = 1, label = encode(show["title"]), mark_new = 1)   
         else:
-            url = get_url(action='list_show', showId = show["id"], page = 1, label = show["title"].encode("utf-8"), mark_new = 0)                            
+            url = get_url(action='list_show', showId = show["id"], page = 1, label = encode(show["title"]), mark_new = 0)                            
         list_item.setContentLookup(False) 
         xbmcplugin.addDirectoryItem(_handle, url, list_item, True)      
     xbmcplugin.endOfDirectory(_handle, cacheToDisc = False) 
@@ -141,7 +146,7 @@ def get_favourites(others = 0):
                 data = json.loads(item)
     except IOError:
         data = {}
-    for key in data.keys():
+    for key in list(data):
         if others == 0 and "others" in data[key] and data[key]["others"] == 1:
             del data[key]
         if others == 1 and ("others" not in data[key] or data[key]["others"] == 0):
@@ -195,7 +200,7 @@ def list_favourites_new(label):
             list_item.setInfo( "video", { "tvshowtitle" : episodes[key]["tvshowtitle"], "title" : episodes[key]["title"], "aired" : episodes[key]["aired"], "director" : episodes[key]["director"] , "plot" : episodes[key]["plot"], "studio" : episodes[key]["studio"] })
             list_item.setProperty("IsPlayable", "true")
             list_item.setContentLookup(False)
-            url = get_url(action='play', url = episodes[key]["link"].encode("utf-8"), showId = episodes[key]["showId"], episodeId = key) 
+            url = get_url(action='play', url = encode(episodes[key]["link"]), showId = episodes[key]["showId"], episodeId = key) 
             xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     xbmcplugin.endOfDirectory(_handle)
 
@@ -212,7 +217,7 @@ def set_listened(episodeId, showId):
 
 def get_listened(episodeId):
     open_db()
-    row = None
+    row = None # pylint: disable=unused-variable 
     found = 0
     for row in db.execute('SELECT episodeId FROM listened WHERE episodeId = ?', [str(episodeId)]):
       found = 1

@@ -6,10 +6,15 @@ import xbmcplugin
 import xbmcaddon
 import xbmc
 
-from urllib import quote, unquote_plus
-from urlparse import parse_qsl
+try:
+    from urlparse import parse_qsl
+    from urllib import quote, unquote_plus
+    
+except ImportError:
+    from urllib.parse import parse_qsl
+    from urllib.parse import quote, unquote_plus
 
-from libs.utils import get_url, call_api, parse_date
+from libs.utils import get_url, call_api, parse_date, encode
 from libs.stations import get_stations, get_station_from_stationId
 from libs.persons import get_person
 
@@ -28,7 +33,7 @@ def list_shows_stations(label):
     stations, stations_nums  = get_stations(filtered=1)
     for num in sorted(stations_nums.keys()):
         list_item = xbmcgui.ListItem(label=stations[stations_nums[num]]["title"])
-        url = get_url(action='list_shows_stations_shows', stationId =  stations[stations_nums[num]]["id"], page = 1, label = stations[stations_nums[num]]["title"].encode("utf-8"))  
+        url = get_url(action='list_shows_stations_shows', stationId =  stations[stations_nums[num]]["id"], page = 1, label = encode(stations[stations_nums[num]]["title"]))  
         list_item.setArt({ "thumb" : stations[stations_nums[num]]["img"], "icon" : stations[stations_nums[num]]["img"] })
         xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
     xbmcplugin.endOfDirectory(_handle)        
@@ -53,7 +58,7 @@ def list_shows_stations_shows(stationId, page, label):
                 for person in show["relationships"]["participants"]["data"]:
                     cast.append(get_person(person["id"]))
                 list_item.setInfo( "video", { "cast" : cast })            
-            url = get_url(action='list_show', showId = show["id"], page = 1, label = show["attributes"]["title"].encode("utf-8"))  
+            url = get_url(action='list_show', showId = show["id"], page = 1, label = encode(show["attributes"]["title"]))  
             menus = [("Přidat k oblíbeným pořadům", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + "&others=0)"),
                      ("Přidat k ostatním obl. pořadům", "RunPlugin(plugin://plugin.audio.cro?action=add_favourites&showId=" + str(show["id"]) + "&others=1)")
                     ]
@@ -99,7 +104,7 @@ def list_show(showId, page, label, mark_new = 0):
                     list_item.setInfo( "video", { "cast" : show["cast"] })                
                 list_item.setProperty("IsPlayable", "true")
                 list_item.setContentLookup(False)
-                url = get_url(action='play', url = link.encode("utf-8"), showId = showId, episodeId = episode["id"])  
+                url = get_url(action='play', url = encode(link), showId = showId, episodeId = episode["id"])  
                 xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
         if page * page_size <= items_count:
             list_item = xbmcgui.ListItem(label="Následující strana")
