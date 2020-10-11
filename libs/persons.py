@@ -14,13 +14,12 @@ except ImportError:
 import codecs
 import json
 
-from libs.utils import call_api
+from libs.utils import call_api, get_userdata_dir
 
 addon = xbmcaddon.Addon(id='plugin.audio.cro')
-addon_userdata_dir = translatePath(addon.getAddonInfo('profile'))
 
 def get_person(personId):
-    filename = addon_userdata_dir + "persons.txt"
+    filename = get_userdata_dir() + "persons.txt"
     
     persons = get_persons()
     if personId in persons.keys():
@@ -42,7 +41,7 @@ def get_person(personId):
 
 def get_persons():
     persons = {}
-    filename = addon_userdata_dir + "persons.txt"
+    filename = get_userdata_dir() + "persons.txt"
     try:
       with codecs.open(filename, "r", encoding="utf-8") as file:
         for line in file:

@@ -18,17 +18,16 @@ import time
 import sqlite3
 
 from libs.shows import get_show
-from libs.utils import get_url, call_api, parse_date, encode, decode
+from libs.utils import get_url, call_api, parse_date, encode, decode, get_userdata_dir
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
 addon = xbmcaddon.Addon(id='plugin.audio.cro')
-addon_userdata_dir = translatePath(addon.getAddonInfo('profile'))
 
 current_version = 1
 def open_db():
     global db, version
-    db = sqlite3.connect(addon_userdata_dir + "listened.db", timeout = 20)
+    db = sqlite3.connect(get_userdata_dir() + "listened.db", timeout = 20)
     db.execute('CREATE TABLE IF NOT EXISTS version (version INTEGER PRIMARY KEY)')
     db.execute('CREATE TABLE IF NOT EXISTS listened (episodeId VARCHAR PRIMARY KEY, showId VARCHAR)')
     row = None
@@ -102,7 +101,7 @@ def list_favourites(label, others = 0):
     xbmcplugin.endOfDirectory(_handle, cacheToDisc = False) 
 
 def delete_favourites(showId):
-    filename = addon_userdata_dir + "favourites.txt"
+    filename = get_userdata_dir() + "favourites.txt"
     favourites = get_favourites(others = -1)
     err = 0
     if showId in favourites.keys():
@@ -119,7 +118,7 @@ def delete_favourites(showId):
         xbmc.executebuiltin('Container.Refresh')
 
 def add_favourites(showId, others):
-    filename = addon_userdata_dir + "favourites.txt"
+    filename = get_userdata_dir() + "favourites.txt"
     favourites = get_favourites(others = -1)
     err = 0
     if showId not in favourites.keys():
@@ -138,7 +137,7 @@ def add_favourites(showId, others):
             xbmcgui.Dialog().notification("ČRo","Pořad byl přidán do oblíbených", xbmcgui.NOTIFICATION_INFO, 4000)            
 
 def get_favourites(others = 0):
-    filename = addon_userdata_dir + "favourites.txt"
+    filename = get_userdata_dir() + "favourites.txt"
     try:
         with open(filename, "r") as file:
             for line in file:
@@ -154,7 +153,7 @@ def get_favourites(others = 0):
     return data    
 
 def set_others(showId, val):
-    filename = addon_userdata_dir + "favourites.txt"
+    filename = get_userdata_dir() + "favourites.txt"
     favourites = get_favourites(others = -1)
     for key in favourites:
         if key == showId:

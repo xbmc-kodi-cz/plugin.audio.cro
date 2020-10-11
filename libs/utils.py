@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 import os                     
 import sys
+import xbmcgui
 import xbmc
 import xbmcaddon
 
 import json
 
+try:
+    from xbmcvfs import translatePath
+except ImportError:
+    from xbmc import translatePath
+  
 try:
     from urllib2 import urlopen, Request, HTTPError
     from urllib import urlencode, quote
@@ -53,6 +59,15 @@ def call_api(url):
             return []
     except HTTPError as e:
         return { "err" : e.reason }  
+
+def get_userdata_dir():
+    addon_userdata_dir = translatePath(addon.getAddonInfo('profile'))
+    if os.path.exists(addon_userdata_dir) == False: 
+        try:
+            os.mkdir(addon_userdata_dir)
+        except OSError:
+            xbmcgui.Dialog().notification("ČRo","Problém při vytvoření nastavení", xbmcgui.NOTIFICATION_ERROR, 3000)
+    return addon_userdata_dir
 
 def get_url(**kwargs):
     return '{0}?{1}'.format(_url, urlencode(kwargs))

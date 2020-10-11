@@ -1,3 +1,6 @@
+v1.1.5 (2020-10-11)
+- ošetření chybějícího adresáře pro data doplňku
+
 v1.1.4 (2020-10-10)    
 - komatibilita s Kodi 19 (Matrix)
 - oprava přehrávání některých epizod v tématech

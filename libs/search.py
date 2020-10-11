@@ -16,14 +16,13 @@ try:
 except ImportError:
     from urllib.parse import quote
 
-from libs.utils import call_api, get_url, encode
+from libs.utils import call_api, get_url, encode, get_userdata_dir
 from libs.shows import get_show, get_person, list_show
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
 addon = xbmcaddon.Addon(id='plugin.audio.cro')
-addon_userdata_dir = translatePath(addon.getAddonInfo('profile'))
 
 def list_search(label):
     list_item = xbmcgui.ListItem(label="Podle názvu")
@@ -104,7 +103,7 @@ def do_search(query, label):
     xbmcplugin.endOfDirectory(_handle)
 
 def delete_search(query):
-    filename = addon_userdata_dir + "search_history.txt"
+    filename = get_userdata_dir() + "search_history.txt"
     history = load_search_history()
     for item in history:
         if item == query:
@@ -118,7 +117,7 @@ def delete_search(query):
     xbmc.executebuiltin('Container.Refresh')
 
 def delete_search_person(query):
-    filename = addon_userdata_dir + "search_history_person.txt"
+    filename = get_userdata_dir() + "search_history_person.txt"
     history = load_search_history_person()
     for item in history:
         if item == query:
@@ -161,7 +160,7 @@ def save_search_history(query):
     max_history = int(addon.getSetting("search_history"))
     cnt = 0
     history = []
-    filename = addon_userdata_dir + "search_history.txt"
+    filename = get_userdata_dir() + "search_history.txt"
     try:
         with open(filename, "r") as file:
             for line in file:
@@ -178,7 +177,7 @@ def save_search_history(query):
 
 def load_search_history():
     history = []
-    filename = addon_userdata_dir + "search_history.txt"
+    filename = get_userdata_dir() + "search_history.txt"
     try:
         with open(filename, "r") as file:
             for line in file:
@@ -192,7 +191,7 @@ def save_search_history_person(query):
     max_history = int(addon.getSetting("search_history"))
     cnt = 0
     history = []
-    filename = addon_userdata_dir + "search_history_person.txt"
+    filename = get_userdata_dir() + "search_history_person.txt"
     try:
         with open(filename, "r") as file:
             for line in file:
@@ -209,7 +208,7 @@ def save_search_history_person(query):
 
 def load_search_history_person():
     history = []
-    filename = addon_userdata_dir + "search_history_person.txt"
+    filename = get_userdata_dir() + "search_history_person.txt"
     try:
         with open(filename, "r") as file:
             for line in file:

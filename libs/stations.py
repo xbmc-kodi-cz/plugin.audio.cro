@@ -15,13 +15,12 @@ import codecs
 import json
 import time
 
-from libs.utils import call_api, get_url
+from libs.utils import call_api, get_url, get_userdata_dir
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
 addon = xbmcaddon.Addon(id='plugin.audio.cro')
-addon_userdata_dir = translatePath(addon.getAddonInfo('profile'))
 
 def get_stations(filtered = 1):
     stations = {}
@@ -30,7 +29,7 @@ def get_stations(filtered = 1):
 
     not_found = 0
     valid_to = -1
-    filename = addon_userdata_dir + "stations.txt"
+    filename = get_userdata_dir() + "stations.txt"
     try:
       with codecs.open(filename, "r", encoding="utf-8") as file:
         for line in file:
@@ -76,7 +75,7 @@ def get_stations(filtered = 1):
     return stations, stations_nums     
     
 def toogle_station(stationId):
-    filename = addon_userdata_dir + "stations.txt"
+    filename = get_userdata_dir() + "stations.txt"
     stations, stations_nums  = get_stations(filtered=0)
     for key in stations:
         if stations[key]["id"] == stationId:
