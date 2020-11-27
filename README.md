@@ -3,6 +3,9 @@
 Kodi doplněk Český rozhlas (ČRo) upožnuje poslech pořadů archivu stanic Českého rozhlasu 
 <p>
 <br>
+v1.1.7 (2020-11-27)<br>
+- přidání závislosti na verzi pythonu (oddělení větví pro Matrix a Leia a starší)<br><br>
+
 v1.1.6 (2020-10-11)<br>
 - ošetření chybějícího adresáře pro data doplňku<br><br>
 

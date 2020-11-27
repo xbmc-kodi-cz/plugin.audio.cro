@@ -1,3 +1,6 @@
+v1.1.7 (2020-11-27)
+- přidání závislosti na verzi pythonu (oddělení větví pro Matrix a Leia a starší)
+
 v1.1.6 (2020-10-11)
 - ošetření chybějícího adresáře pro data doplňku
 
