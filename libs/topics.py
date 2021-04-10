@@ -8,7 +8,7 @@ import xbmc
 
 from datetime import datetime
 
-from libs.utils import get_url, call_api, parse_date, encode
+from libs.utils import get_url, call_api, parse_date, encode, PY2
 from libs.shows import get_show
 
 _url = sys.argv[0]
@@ -115,8 +115,11 @@ def list_topic_recommended(topicId, filtr, label):
                                 list_item.setInfo( "video", { "cast" : show["cast"] })   
                             list_item.setProperty("IsPlayable", "true")
                             list_item.setContentLookup(False)
-                            url = get_url(action='play', url = url, showId = show["id"], episodeId = item["entity"]["id"])  
-                            xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+                            url = get_url(action='play', url = url, showId = show["id"], episodeId = item["entity"]["id"], title = encode(title), img = show["img"])  
+                            if PY2:
+                                xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+                            else:
+                                xbmcplugin.addDirectoryItem(_handle, url, list_item, True)                            
                     if "type" in item and item["type"] == "episode":
                         show = get_show(item["relationships"]["show"]["data"]["id"])
                         starttime =  parse_date(item["attributes"]["since"])
@@ -129,8 +132,11 @@ def list_topic_recommended(topicId, filtr, label):
                             list_item.setInfo( "video", { "cast" : show["cast"] })   
                         list_item.setProperty("IsPlayable", "true")
                         list_item.setContentLookup(False)
-                        url = get_url(action='play', url = url, showId = show["id"], episodeId = item["id"])  
-                        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+                        url = get_url(action='play', url = url, showId = show["id"], episodeId = item["id"], title = encode(title), img = show["img"])  
+                        if PY2:
+                            xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+                        else:
+                            xbmcplugin.addDirectoryItem(_handle, url, list_item, True)                        
         xbmcplugin.endOfDirectory(_handle)
     else:
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
