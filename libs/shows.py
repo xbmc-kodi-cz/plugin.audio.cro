@@ -14,7 +14,7 @@ except ImportError:
     from urllib.parse import parse_qsl
     from urllib.parse import quote, unquote_plus
 
-from libs.utils import get_url, call_api, parse_date, encode
+from libs.utils import get_url, call_api, parse_date, encode, PY2
 from libs.stations import get_stations, get_station_from_stationId
 from libs.persons import get_person
 
@@ -104,8 +104,11 @@ def list_show(showId, page, label, mark_new = 0):
                     list_item.setInfo( "video", { "cast" : show["cast"] })                
                 list_item.setProperty("IsPlayable", "true")
                 list_item.setContentLookup(False)
-                url = get_url(action='play', url = encode(link), showId = showId, episodeId = episode["id"])  
-                xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+                url = get_url(action='play', url = encode(link), showId = showId, episodeId = episode["id"], title = encode(title), img = show["img"])  
+                if PY2:
+                    xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+                else:
+                    xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
         if page * page_size <= items_count:
             list_item = xbmcgui.ListItem(label="Následující strana")
             url = get_url(action='list_show', showId =  showId, page = page + 1, label = label, mark_new = mark_new)  

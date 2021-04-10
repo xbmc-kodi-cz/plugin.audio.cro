@@ -18,7 +18,7 @@ import time
 import sqlite3
 
 from libs.shows import get_show
-from libs.utils import get_url, call_api, parse_date, encode, decode, get_userdata_dir
+from libs.utils import get_url, call_api, parse_date, encode, decode, get_userdata_dir, PY2
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
@@ -199,8 +199,11 @@ def list_favourites_new(label):
             list_item.setInfo( "video", { "tvshowtitle" : episodes[key]["tvshowtitle"], "title" : episodes[key]["title"], "aired" : episodes[key]["aired"], "director" : episodes[key]["director"] , "plot" : episodes[key]["plot"], "studio" : episodes[key]["studio"] })
             list_item.setProperty("IsPlayable", "true")
             list_item.setContentLookup(False)
-            url = get_url(action='play', url = encode(episodes[key]["link"]), showId = episodes[key]["showId"], episodeId = key) 
-            xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+            url = get_url(action='play', url = encode(episodes[key]["link"]), showId = episodes[key]["showId"], episodeId = key, title = encode(episodes[key]["title"]), img = episodes[key]["img"]) 
+            if PY2:
+                xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+            else:
+                xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
     xbmcplugin.endOfDirectory(_handle)
 
 def set_listened(episodeId, showId):

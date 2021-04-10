@@ -152,7 +152,7 @@ def router(paramstring):
             toogle_station(params["stationId"])
 
         elif params['action'] == 'play':
-            play(params["url"], params["showId"], params["episodeId"])
+            play(params["url"], params["showId"], params["episodeId"], params["title"], params["img"])
         elif params['action'] == 'play_live':
             play_live(params["url"], params["title"], params["img"])
 
