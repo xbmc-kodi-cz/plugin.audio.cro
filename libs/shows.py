@@ -122,7 +122,7 @@ def list_show(showId, page, label, mark_new = 0):
 def get_show(showId):
     data = call_api(url = "https://api.mujrozhlas.cz/shows/" + showId)
     if "err" in data:
-        xbmcgui.Dialog().notification("ČRo","Problém při získání dat o pořadu", xbmcgui.NOTIFICATION_ERROR, 4000)
+        xbmcgui.Dialog().notification("ČRo","Pořad nenalezen!", xbmcgui.NOTIFICATION_ERROR, 4000)
         sys.exit()
     if "data" in data and len(data["data"]) > 0 and "attributes" in data["data"]:
         title = data["data"]["attributes"]["title"]

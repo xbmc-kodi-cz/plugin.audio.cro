@@ -74,8 +74,10 @@ def list_favourites(label, others = 0):
             unlistened = get_unlistened_count(showId)
             if unlistened > 0 :
                 list_item = xbmcgui.ListItem(label=show["title"] + " (" + str(unlistened) + decode(" nových)"))
-            else:
+            elif unlistened == 0:
                 list_item = xbmcgui.ListItem(label=show["title"])            
+            else:
+                list_item = xbmcgui.ListItem(label=show["title"] + ' (nenalezený pořad)') 
         else:
             list_item = xbmcgui.ListItem(label=show["title"])            
         list_item.setArt({ "thumb" : show["img"], "icon" : show["img"] })
@@ -176,8 +178,8 @@ def list_favourites_new(label):
         show = favourites[showId]
         data = call_api(url = "https://api.mujrozhlas.cz/shows/" + showId + "/episodes?sort=-since&page[limit]=" + str(items))
         if "err" in data:
-            xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
-            sys.exit()
+            xbmcgui.Dialog().notification("ČRo","Pořad " + show["title"] + " nebyl nalezený", xbmcgui.NOTIFICATION_ERROR, 4000)
+            # sys.exit()
         if "data" in data and len(data["data"]) > 0:      
             for episode in data["data"]:
                 if "attributes" in episode and "title" in episode["attributes"] and len(episode["attributes"]["title"]) > 0:
@@ -233,10 +235,11 @@ def get_listened(episodeId):
 def get_unlistened_count(showId):
     items_count = 0
     new = 0
+    err = 0
     data = call_api(url = "https://api.mujrozhlas.cz/shows/" + showId + "/episodes?sort=-since&page[limit]=1&page[offset]=0")
     if "err" in data:
-        xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
-        sys.exit()
+        # xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
+        return -1
     if "data" in data and len(data["data"]) > 0:      
         items_count = int(data["meta"]["count"])
 
