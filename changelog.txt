@@ -1,3 +1,7 @@
+v1.2.0 (2021-12-03)
+- oprava logování v Kodi 19
+- ošetření stanic bez mp3 streamu
+
 v1.1.9 (2021-08-21)
 - ošetření neexistujících pořadů v oblíbených
 

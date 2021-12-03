@@ -22,24 +22,24 @@ def list_live(label):
     urls = get_urls()
     for num in sorted(stations_nums.keys()):
         info = {}
-        if stations[stations_nums[num]]["id"] in schedule:
-            title = stations[stations_nums[num]]["title"] + " - " + schedule[stations[stations_nums[num]]["id"]]["show"] + " (" + schedule[stations[stations_nums[num]]["id"]]["start"] + " - " + schedule[stations[stations_nums[num]]["id"]]["end"] + ")"
-            info = { "title" : schedule[stations[stations_nums[num]]["id"]]["show"], "plot" : schedule[stations[stations_nums[num]]["id"]]["title"] }
-        else:
-            title = stations[stations_nums[num]]["title"]
-        list_item = xbmcgui.ListItem(label=title)
-        if "img" in stations[stations_nums[num]] and len(stations[stations_nums[num]]["img"]) > 0:
-            img = stations[stations_nums[num]]["img"]
-            list_item.setArt({ "thumb" : img, "icon" : img })
-        else:
-            img = "xxx"       
+        if stations[stations_nums[num]]["id"] in urls:
+            if stations[stations_nums[num]]["id"] in schedule:
+                title = stations[stations_nums[num]]["title"] + " - " + schedule[stations[stations_nums[num]]["id"]]["show"] + " (" + schedule[stations[stations_nums[num]]["id"]]["start"] + " - " + schedule[stations[stations_nums[num]]["id"]]["end"] + ")"
+                info = { "title" : schedule[stations[stations_nums[num]]["id"]]["show"], "plot" : schedule[stations[stations_nums[num]]["id"]]["title"] }
+            else:
+                title = stations[stations_nums[num]]["title"]
+            list_item = xbmcgui.ListItem(label=title)
+            if "img" in stations[stations_nums[num]] and len(stations[stations_nums[num]]["img"]) > 0:
+                img = stations[stations_nums[num]]["img"]
+                list_item.setArt({ "thumb" : img, "icon" : img })
+            else:
+                img = "xxx"       
 
-        url = get_url(action='play_live', url =  urls[stations[stations_nums[num]]["id"]], title = encode(title), img = img)  
+            url = get_url(action='play_live', url =  urls[stations[stations_nums[num]]["id"]], title = encode(title), img = img)  
 
-        if len(info) > 0:
-            list_item.setInfo("music", info)
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
-
+            if len(info) > 0:
+                list_item.setInfo("music", info)
+            xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
     xbmcplugin.endOfDirectory(_handle)        
 
 def get_current_schedule():
@@ -73,12 +73,13 @@ def get_urls():
         for station in data["data"]:
             if "attributes" in station and "audioLinks" in station["attributes"] and len(station["attributes"]["audioLinks"]) > 0:
                 url = ""
+                print(station)
                 for audiolink in station["attributes"]["audioLinks"]:
-                    if audiolink["variant"] == "mp3" and  audiolink["linkType"] == "directstream" and len(url) == 0:
+                    if audiolink["variant"] == "mp3"  and  audiolink["linkType"] == "directstream" and len(url) == 0:
                         url = audiolink["url"] 
                 if len(url) > 1:
                     urls.update({ station["id"] : url})
-                else:
-                    xbmcgui.Dialog().notification("ČRo","Problém při načtení streamu", xbmcgui.NOTIFICATION_ERROR, 4000)
-                    sys.exit()            
+                # else:
+                #     xbmcgui.Dialog().notification("ČRo","Problém při načtení streamu", xbmcgui.NOTIFICATION_ERROR, 4000)
+                #     sys.exit()            
     return urls
