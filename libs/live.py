@@ -34,8 +34,7 @@ def list_live(label):
                 list_item.setArt({ "thumb" : img, "icon" : img })
             else:
                 img = "xxx"       
-
-            url = get_url(action='play_live', url =  urls[stations[stations_nums[num]]["id"]], title = encode(title), img = img)  
+            url = get_url(action='play_live', url = urls[stations[stations_nums[num]]["id"]], title = encode(title), img = img)  
 
             if len(info) > 0:
                 list_item.setInfo("music", info)
@@ -73,13 +72,26 @@ def get_urls():
         for station in data["data"]:
             if "attributes" in station and "audioLinks" in station["attributes"] and len(station["attributes"]["audioLinks"]) > 0:
                 url = ""
-                print(station)
+                aac_urls = {}
+                mp3_urls = {}
                 for audiolink in station["attributes"]["audioLinks"]:
+                    if audiolink["linkType"] == "directstream" and len(url) == 0:
+                        if audiolink["variant"] == 'aac':
+                            aac_urls.update({ audiolink["bitrate"] : audiolink["url"] })
+                        if audiolink["variant"] == 'mp3':
+                            mp3_urls.update({ audiolink["bitrate"] : audiolink["url"] })
                     if audiolink["variant"] == "mp3"  and  audiolink["linkType"] == "directstream" and len(url) == 0:
                         url = audiolink["url"] 
+                if addon.getSetting("prefer_aac") == "true":
+                    if len(aac_urls) > 0:
+                        url = aac_urls[max(aac_urls.keys())]
+                    elif len(mp3_urls):
+                        url = mp3_urls[max(mp3_urls.keys())]
+                else:
+                    if len(mp3_urls) > 0:
+                        url = mp3_urls[max(mp3_urls.keys())]
+                    elif len(aac_urls):
+                        url = aac_urls[max(aac_urls.keys())]
                 if len(url) > 1:
                     urls.update({ station["id"] : url})
-                # else:
-                #     xbmcgui.Dialog().notification("ČRo","Problém při načtení streamu", xbmcgui.NOTIFICATION_ERROR, 4000)
-                #     sys.exit()            
     return urls

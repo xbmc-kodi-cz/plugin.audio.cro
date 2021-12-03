@@ -7,6 +7,7 @@
 		<setting label="Skrýt Nastavení stanic v menu" type="bool" id="hide_stations_settings" default="false"/>
 		<setting label="Skrýt Novinky oblíbených pořadů v menu " type="bool" id="hide_favourites_new" default="false"/>		
 		<setting label="Skrýt neposlechnuté epizody obl. pořadů" type="bool" id="hide_unlistened_favourites" default="false"/>	
+		<setting label="Preferovat AAC před MP3" type="bool" id="prefer_aac" default="true"/>	
 	</category>
 	<category label="Logování">
         <setting label="Logování požadavků" type="bool" id="log_request" default="false"/>

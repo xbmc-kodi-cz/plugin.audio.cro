@@ -1,3 +1,7 @@
+v1.2.1 (2021-12-03)
+- do nastavení přidané nastavení preference formátu AAC před MP3
+- přidaná možnost přehrávat AAC streamy
+
 v1.2.0 (2021-12-03)
 - oprava logování v Kodi 19
 - ošetření stanic bez mp3 streamu

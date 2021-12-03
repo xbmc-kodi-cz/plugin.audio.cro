@@ -3,6 +3,10 @@
 Kodi doplněk Český rozhlas (ČRo) upožnuje poslech pořadů archivu stanic Českého rozhlasu 
 <p>
 <br>
+v1.2.1 (2021-12-03)<br>
+- do nastavení přidané nastavení preference formátu AAC před MP3<br>
+- přidaná možnost přehrávat AAC streamy<br><br>
+
 v1.2.0 (2021-12-03)<br>
 - oprava logování v Kodi 19<br>
 - ošetření stanic bez mp3 streamu<br><br>

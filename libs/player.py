@@ -30,7 +30,6 @@ def play(url, showId, episodeId, title, img):
         xbmc.Player().play(playlist, windowed = False)
     
 def play_live(url, title, img):
-    print(url)
     list_item = xbmcgui.ListItem(label = title, path = url)
     if img != None:
         list_item.setArt({ "thumb" : img, "icon" : img })
