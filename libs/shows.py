@@ -86,7 +86,6 @@ def list_show(showId, page, label, mark_new = 0):
         items_count = int(data["meta"]["count"])
         for episode in data["data"]:
             if "attributes" in episode and "title" in episode["attributes"] and len(episode["attributes"]["title"]) > 0:
-                print(episode)
                 starttime =  parse_date(episode["attributes"]["since"])
                 if "mirroredSerial" in episode["attributes"] and "totalParts" in episode["attributes"]["mirroredSerial"] and "part" in episode["attributes"]:
                     parts =  " (" + str(episode["attributes"]["part"]) + "/" + str(episode["attributes"]["mirroredSerial"]["totalParts"]) + ") "
