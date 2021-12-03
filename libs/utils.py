@@ -51,7 +51,7 @@ def call_api(url):
     try:
         html = urlopen(request).read()
         if addon.getSetting("log_response") == "true":
-            xbmc.log(html)      
+            xbmc.log(str(html))      
         if html and len(html) > 0:
             data = json.loads(html)
             return data

@@ -1,4 +1,4 @@
-﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.1.9">
+﻿<addon id="plugin.audio.cro" name="ČRo" provider-name="waladir" version="1.2.0">
   <requires>
     <import addon="xbmc.python" version="3.0.0"/>
   </requires>
@@ -26,6 +26,10 @@ Další informace a podporu k doplňku najdete na fóru www.xbmc-kodi.cz (https:
     <platform>all</platform>
     <source>https://github.com/waladir/plugin.audio.cro</source>
     <news>
+v1.2.0 (2021-12-03)
+- oprava logování v Kodi 19
+- ošetření stanic bez mp3 streamu
+
 v1.1.9 (2021-08-21)
 - ošetření neexistujících pořadů v oblíbených
 
