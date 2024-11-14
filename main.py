@@ -4,14 +4,13 @@ import sys
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
-import xbmc
   
 try:
     from urlparse import parse_qsl
 except ImportError:
     from urllib.parse import parse_qsl
 
-from libs.utils import get_url, call_api
+from libs.utils import get_url
 from libs.live import list_live
 from libs.program import list_program, list_program_week, list_program_day, program_set_week
 from libs.topics import list_topics, list_topic, list_topic_recommended

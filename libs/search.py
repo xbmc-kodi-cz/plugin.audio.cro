@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os                     
 import sys
 import xbmcgui
 import xbmcplugin
@@ -7,17 +6,12 @@ import xbmcaddon
 import xbmc
 
 try:
-    from xbmcvfs import translatePath
-except ImportError:
-    from xbmc import translatePath
-
-try:
     from urllib import quote
 except ImportError:
     from urllib.parse import quote
 
 from libs.utils import call_api, get_url, encode, get_userdata_dir
-from libs.shows import get_show, get_person, list_show
+from libs.shows import get_show
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
@@ -80,9 +74,7 @@ def do_search(query, label):
     shows_ordered = {}
     
     shows, shows_ordered = search_episodes(shows, shows_ordered, "title", query)
-    #shows, shows_ordered = search_episodes(shows, shows_ordered, "description", query)
     shows, shows_ordered = search_shows(shows, shows_ordered, "title", query)
-    #shows, shows_ordered = search_shows(shows, shows_ordered, "description", query)
 
     if len(shows) > 0:
         for key in sorted(shows_ordered, key=shows.get('id')):             

@@ -4,11 +4,8 @@ import sys
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
-import xbmc
 
-from datetime import datetime
-
-from libs.utils import get_url, call_api, parse_date, encode, PY2
+from libs.utils import get_url, call_api, parse_date, encode, PY2, get_stream_url
 from libs.shows import get_show
 
 _url = sys.argv[0]
@@ -108,7 +105,7 @@ def list_topic_recommended(topicId, filtr, label):
                             starttime =  parse_date(item["entity"]["attributes"]["since"])
                             title = item["entity"]["attributes"]["mirroredShow"]["title"] + " - " + item["entity"]["attributes"]["title"] + " (" + starttime.strftime("%d.%m.%Y %H:%M") + ")"
                             list_item = xbmcgui.ListItem(label=title)
-                            url = item["entity"]["attributes"]["audioLinks"][0]["url"]
+                            url = get_stream_url(item["entity"]["attributes"]["audioLinks"])
                             list_item.setArt({ "thumb" : show["img"], "icon" : show["img"] })
                             list_item.setInfo( "video", { "tvshowtitle" : show["title"], "title" : title, "aired" : starttime.strftime("%Y-%m-%d"), "director" : [show["director"]], "plot" : show["description"], "studio" : show["station"] })
                             if len(show["cast"]) > 0:
@@ -124,7 +121,7 @@ def list_topic_recommended(topicId, filtr, label):
                         show = get_show(item["relationships"]["show"]["data"]["id"])
                         starttime =  parse_date(item["attributes"]["since"])
                         title = item["attributes"]["mirroredShow"]["title"] + " - " + item["attributes"]["title"] + " (" + starttime.strftime("%d.%m.%Y %H:%M") + ")"
-                        url = item["attributes"]["audioLinks"][0]["url"]
+                        url = get_stream_url(item["attributes"]["audioLinks"])
                         list_item = xbmcgui.ListItem(label=title)
                         list_item.setArt({ "thumb" : show["img"], "icon" : show["img"] })
                         list_item.setInfo( "video", { "tvshowtitle" : show["title"], "title" : title, "aired" : starttime.strftime("%Y-%m-%d"), "director" : [show["director"]], "plot" : show["description"], "studio" : show["station"] })
