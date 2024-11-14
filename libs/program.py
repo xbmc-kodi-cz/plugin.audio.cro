@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-import os                     
 import sys
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
-import xbmc
 
 from datetime import datetime, timedelta
 

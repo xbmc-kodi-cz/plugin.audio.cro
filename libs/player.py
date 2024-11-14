@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-import os                     
 import sys
 import xbmcgui
 import xbmcplugin
-import xbmcaddon
 import xbmc
 
-from libs.utils import call_api, PY2
+from libs.utils import PY2
 from libs.favourites import get_favourites, set_listened
 
 _url = sys.argv[0]

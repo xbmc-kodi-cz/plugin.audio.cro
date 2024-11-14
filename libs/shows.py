@@ -1,20 +1,10 @@
 # -*- coding: utf-8 -*-
-import os                     
 import sys
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
-import xbmc
 
-try:
-    from urlparse import parse_qsl
-    from urllib import quote, unquote_plus
-    
-except ImportError:
-    from urllib.parse import parse_qsl
-    from urllib.parse import quote, unquote_plus
-
-from libs.utils import get_url, call_api, parse_date, encode, PY2
+from libs.utils import get_url, call_api, parse_date, encode, PY2, get_stream_url
 from libs.stations import get_stations, get_station_from_stationId
 from libs.persons import get_person
 
@@ -82,6 +72,7 @@ def list_show(showId, page, label, mark_new = 0):
     if "err" in data:
         xbmcgui.Dialog().notification("ČRo","Problém při získání pořadů", xbmcgui.NOTIFICATION_ERROR, 4000)
         sys.exit()
+    print(data)
     if "data" in data and len(data["data"]) > 0:
         items_count = int(data["meta"]["count"])
         for episode in data["data"]:
@@ -93,7 +84,7 @@ def list_show(showId, page, label, mark_new = 0):
                     parts = ""      
                 title = episode["attributes"]["title"] + parts + " (" + starttime.strftime("%d.%m.%Y %H:%M") + ")"
                 from libs.favourites import get_listened
-                link = episode["attributes"]["audioLinks"][0]["url"]
+                link = get_stream_url(episode["attributes"]["audioLinks"])
                 if int(mark_new) == 1 and not get_listened(episode["id"]):
                     list_item = xbmcgui.ListItem(label="* " + title)
                 else:

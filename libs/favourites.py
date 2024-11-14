@@ -1,24 +1,18 @@
 # -*- coding: utf-8 -*-
-import os                     
 import sys
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
 import xbmc
 
-try:
-    from xbmcvfs import translatePath
-except ImportError:
-    from xbmc import translatePath
 
 import codecs
 import json
-from datetime import datetime
 import time
 import sqlite3
 
 from libs.shows import get_show
-from libs.utils import get_url, call_api, parse_date, encode, decode, get_userdata_dir, PY2
+from libs.utils import get_url, call_api, parse_date, encode, decode, get_userdata_dir, PY2, get_stream_url
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 

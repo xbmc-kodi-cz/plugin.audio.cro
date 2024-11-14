@@ -14,10 +14,10 @@ except ImportError:
   
 try:
     from urllib2 import urlopen, Request, HTTPError
-    from urllib import urlencode, quote
+    from urllib import urlencode
 except ImportError:
     from urllib.request import urlopen, Request
-    from urllib.parse import urlencode, quote
+    from urllib.parse import urlencode
     from urllib.error import HTTPError
 
 from datetime import datetime, timedelta
@@ -83,3 +83,11 @@ def encode(string_to_encode):
         return string_to_encode.encode("utf-8")
     else:
         return string_to_encode  
+    
+def get_stream_url(data):
+    url = ''
+    for item in data:
+        print(item)
+        if item['variant'] == 'hls' or item['variant'] == 'mp3':
+            url = item['url']
+    return url    
