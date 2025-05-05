@@ -1,6 +1,6 @@
 <h1>Český rozhlas</h1>
 <p>
-Kodi doplněk Český rozhlas (ČRo) upožnuje poslech pořadů archivu stanic Českého rozhlasu
+Kodi doplněk Český rozhlas (ČRo) umožnuje poslech pořadů archivu stanic Českého rozhlasu
 <p>
 <br>
 v1.2.2 (2024-11-14)<br>
